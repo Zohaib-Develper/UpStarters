@@ -1,0 +1,42 @@
+.category-container {
+    padding: 1rem;
+    
+  }
+  
+  .category-container ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+  }
+  
+  .category-container ul li {
+    display: inline-block;
+    margin-right: 1rem;
+  }
+  
+  .category-container ul li a {
+    text-decoration: none;
+    color: #000;
+    transition: all 0.3s ease;
+    font-weight: 500;   
+  }
+  
+  .category-container ul li a:hover {
+    font-weight: 500;
+    text-decoration: underline !important;
+  }
+  .category-line {
+    border: none;
+    border-top: 1.5px solid #171616;
+    margin-top: 1rem;
+    width: 100%;
+  }
+  .punch-line{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size:2.3rem;
+    font-weight:400 ;
+    margin-bottom:1rem;
+  }
+  
