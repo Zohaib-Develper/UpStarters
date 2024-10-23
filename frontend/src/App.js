@@ -9,31 +9,31 @@ import Navbar from "./Components/Navbar/Navbar";
 import Footer from "./Components/Footer/Footer";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
-import { AuthProvider } from "./utils/AuthContext";
+// import { AuthProvider } from "./utils/AuthContext";
 import HomePage from "./pages/HomePage";
 //import ProtectedRoute from "./utils/ProtectedRoute";
 
 const App = () => {
   return (
-    <AuthProvider>
-      <Router>
-        <Navbar />
-        <Routes>
-          {/* Public routes */}
+    // <AuthProvider>
+    <Router>
+      <Navbar />
+      <Routes>
+        {/* Public routes */}
 
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
 
-          {/* Protected routes */}
-          {/* Admin routes */}
+        {/* Protected routes */}
+        {/* Admin routes */}
 
-          {/* Catch-all route for unmatched paths */}
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-        <Footer />
-      </Router>
-    </AuthProvider>
+        {/* Catch-all route for unmatched paths */}
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+      <Footer />
+    </Router>
+    // </AuthProvider>
   );
 };
 
