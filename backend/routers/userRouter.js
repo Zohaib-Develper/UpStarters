@@ -4,12 +4,13 @@ const express = require('express')
 
 const router = express.Router();
 
-router.route('/').get(AuthController.Protect, UserController.GetMe).patch(AuthController.Protect, UserController.UpdateMe)
+router.route('/').get(AuthController.Protect, UserController.GetMe).patch(AuthController.Protect, UserController.UpdateMe).delete(AuthController.Protect, UserController.DeleteMe)
 
 router.route('/signup').post(AuthController.SignUp)
-router.route('/login').post( AuthController.LogIn)
+router.route('/verify-otp').post(AuthController.VerifyOTP)
+router.route('/login').post(AuthController.LogIn)
 router.route('/:id').get(UserController.GetUserById)
 router.route('/updatepassword').patch(AuthController.Protect, AuthController.UpdatePassword)
-// AuthController.Protect, AuthController.RestrictTo('investor')
+
 
 module.exports = router

@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const app = require('./app');
-                
+
 dotenv.config({ path: './config.env' });
 
 // Replace the password in the database connection string
@@ -15,7 +15,7 @@ mongoose.connect(DB)
   })
   .catch((err) => {
     console.error('Connection error', err);
-});
+  });
 
 // Start the server
 const port = process.env.PORT || 3000;

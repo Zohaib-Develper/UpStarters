@@ -1,53 +1,53 @@
 const mongoose = require('mongoose')
 
 const projectSchema = new mongoose.Schema({
-    title: { 
-        type: String, 
-        required: true 
-    },
-    summary: { 
+    title: {
         type: String,
-        maxlength : [40,'Summary length must be less than 40'],  
+        required: true
     },
-    description: { 
-        type: String ,
-        minlength : [50,'Descripton length must be graetor than 50'],
+    summary: {
+        type: String,
+        maxlength: [40, 'Summary length must be less than 40'],
     },
-    investmentGoal: { 
-        type: Number, 
-        required: true 
+    description: {
+        type: String,
+        minlength: [50, 'Descripton length must be graetor than 50'],
     },
-    equityOffered: { 
-        type: Number, 
-        required: true 
+    investmentGoal: {
+        type: Number,
+        required: true
     },
-    fundsRaised: { 
-        type: Number, 
-        default: 0 
+    equityOffered: {
+        type: Number,
+        required: true
     },
-    status: { 
-        type: String, 
-        enum: ['pending', 'approved', 'rejected', 'active'], 
+    fundsRaised: {
+        type: Number,
+        default: 0
+    },
+    status: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected', 'active'],
         // required: true 
-        default : 'pending'
+        default: 'pending'
     },
-    createdAt: { 
-        type: Date, 
-        default: Date.now, 
-        expires: '3d'  
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        expires: '3d'
     },
-    startsFrom : {
-        type : Date,
-        required : true
+    startsFrom: {
+        type: Date,
+        required: true
     },
-    creator: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Creator', 
-        required: true 
+    creator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     },
-    investors: [{ 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Investor' 
+    investors: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }], // List of investors who invested
 });
 

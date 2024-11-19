@@ -1,27 +1,27 @@
 const mongoose = require('mongoose')
 
 const investmentSchema = new mongoose.Schema({
-    project: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Project', 
-        required: true 
+    project: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Project',
+        required: true
     },
-    investor: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Investor', 
-        required: true 
+    investor: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     },
-    amount: { 
-        type: Number, 
-        required: true 
+    amount: {
+        type: Number,
+        required: true
     },
-    equityAcquired: { 
-        type: Number, 
+    equityAcquired: {
+        type: Number,
         // required: true 
     },
-    investmentDate: { 
-        type: Date, 
-        default: Date.now 
+    investmentDate: {
+        type: Date,
+        default: Date.now
     },
 });
 

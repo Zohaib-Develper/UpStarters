@@ -1,66 +1,103 @@
-const User = require('../models/userModel')
-const Creator = require('../models/creatorModel')
-const Investor = require('../models/investorModel')
-// const Admin = require('../models/adminModel')
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const {promisify} = require('util');
-const AppError = require('./../utils/appError')
-const catchAync = require('./../utils/catchAsync')
+const User = require('../models/userModel');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const nodemailer = require("nodemailer");
+const AppError = require('./../utils/appError');
+const catchAync = require('./../utils/catchAsync');
+
 
 const GetToken = (id) => {
-    return jwt.sign({id}, process.env.JWT_SECRET_KEY , {expiresIn :process.env.JWT_Expires_In})
-}
+    return jwt.sign({ id }, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_Expires_In });
+};
 
 const CreateSendToken = (user, statusCode, res) => {
-    const token = GetToken(user._id)
+    const token = GetToken(user._id);
 
     const cookieOptions = {
-        expires : new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_In * 24 * 60 * 60 * 1000),
+        expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_In * 24 * 60 * 60 * 1000),
         httpOnly: true,
-    }
+    };
 
-    res.cookie('jwt', token, cookieOptions)
+    res.cookie('jwt', token, cookieOptions);
 
     res.status(statusCode).json({
-        status : "success",
+        status: "success",
         token,
-        user
-    })
-}
+        user,
+    });
+};
 
-exports.SignUp = catchAync (async (req, res, next) => {
+const otpStore = new Map();
 
-    const {name, password, confirmPassword, email, role} = req.body;
+const auth = nodemailer.createTransport({
+    service: "gmail",
+    secure: true,
+    port: 465,
+    auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASS,
+    },
+});
 
-    if(password !== confirmPassword){
-        return next(new AppError("Passwords do not match.", 400))
+// Generate OTP
+const generateOTP = () => Math.floor(100000 + Math.random() * 900000);
+
+// Signup with OTP
+exports.SignUp = catchAync(async (req, res, next) => {
+    const { name, password, confirmPassword, email } = req.body;
+
+    if (password !== confirmPassword) {
+        return next(new AppError("Passwords do not match.", 400));
     }
 
+    // Generate OTP and save it temporarily
+    const otp = generateOTP();
+    otpStore.set(email, otp);
+
+    // Send OTP email
+    const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: "Email Verification - OTP",
+        text: `Your OTP for verification is: ${otp}`,
+    };
+
+    auth.sendMail(mailOptions, async (error) => {
+        if (error) {
+            return next(new AppError("Error sending OTP email. Please try again later.", 500));
+        }
+
+        res.status(200).json({
+            status: "success",
+            message: "OTP sent to your email. Please verify to complete signup.",
+        });
+    });
+});
+
+// Verify OTP and complete signup
+exports.VerifyOTP = catchAync(async (req, res, next) => {
+    const { email, otp } = req.body;
+
+    const storedOTP = otpStore.get(email);
+    if (!storedOTP || storedOTP !== parseInt(otp)) {
+        return next(new AppError("Invalid or expired OTP.", 400));
+    }
+
+    // OTP is verified, create user
+    const { name, password } = req.body;
     const user = await User.create({
         name,
         email,
         password,
-        confirmPassword,
-        role
-    })
+        confirmPassword: password,
+    });
 
-    if(role === 'investor'){
-        await Investor.create({
-            user : user._id,
-            bio : req.body.bio
-        })
-    }
-    else if(role === 'creator'){
-        await Creator.create({
-            user : user._id,
-            bio : req.body.bio
-        })
-    }
+    // Clear OTP from the store
+    otpStore.delete(email);
 
-    CreateSendToken(user, 200, res)
-    
-})
+    CreateSendToken(user, 200, res);
+});
+
 
 exports.LogIn = catchAync (async (req, res, next) => {
     const {email, password} = req.body
@@ -79,7 +116,7 @@ exports.LogIn = catchAync (async (req, res, next) => {
 })
 
 
-exports.Protect = catchAync ( async (req, res, next) => {
+exports.Protect = catchAync(async (req, res, next) => {
     let token;
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         token = req.headers.authorization.split(' ')[1];
@@ -103,7 +140,7 @@ exports.Protect = catchAync ( async (req, res, next) => {
     req.user = currentUser;
     // res.locals.user = currentUser;
     next();
-})
+});
 
 
 exports.RestrictTo = (...roles) => { // Store parameters in an array
