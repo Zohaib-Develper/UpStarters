@@ -1,97 +1,243 @@
-import React, { Component } from 'react';
-import './SignUp.css'; // Import the CSS file
+import React, { Component } from "react";
+import "./SignUp.css";
 
 export default class SignUp extends Component {
   state = {
-    name: '',
-    phone:'',
-    email: '',
-    password: '',
+    email: "",
+    password: "",
+    showPassword: false,
+    cardNumber: "",
+    cvv: "",
+    expiry: "",
   };
-
+  // Handle change for card number and apply formatting (XXXX-XXXX-XXXX-XXXX)
+  formatCardNumber = (value) => {
+    let formatted = value.replace(/\D/g, "").slice(0, 16); // Remove non-digits and limit to 16 characters
+    if (formatted.length <= 4) return formatted;
+    if (formatted.length <= 8)
+      return formatted.replace(/(\d{4})(\d{0,4})/, "$1-$2");
+    if (formatted.length <= 12)
+      return formatted.replace(/(\d{4})(\d{4})(\d{0,4})/, "$1-$2-$3");
+    return formatted.replace(/(\d{4})(\d{4})(\d{4})(\d{0,4})/, "$1-$2-$3-$4");
+  };
+  formatExpiry = (value) => {
+    let formatted = value.replace(/\D/g, "").slice(0, 4); // Remove non-digits and limit to 4 characters
+    if (formatted.length <= 2) return formatted;
+    return formatted.replace(/(\d{2})(\d{0,2})/, "$1/$2");
+  };
   handleChange = (e) => {
     const { name, value } = e.target;
-    this.setState({ [name]: value });
+    if (name === "email") {
+      this.setState({ email: value });
+    } else if (name === "password") {
+      this.setState({ password: value });
+    } else if (name === "cardNumber") {
+      this.setState({ cardNumber: this.formatCardNumber(value) });
+    } else if (name === "cvv") {
+      this.setState({ cvv: value.replace(/\D/g, "").slice(0, 3) }); // Only digits, max 3 digits
+    } else if (name === "expiry") {
+      this.setState({ expiry: this.formatExpiry(value) });
+    }
   };
-
+  togglePasswordVisibility = () => {
+    this.setState((prevState) => ({ showPassword: !prevState.showPassword }));
+  };
   handleSubmit = (e) => {
     e.preventDefault();
-    const { name, phone, email, password } = this.state;
-    // handle the form submission (backend)
-    console.log('Name:', name);
-    console.log('Phone:', phone);
-    console.log('Email:', email);
-    console.log('Password:', password);
+    const { email, password, cardNumber, cvv, expiry } = this.state;
+
+    if (!email || !password || !cardNumber || !cvv || !expiry) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    // (API call)
+    console.log("Email:", email);
+    console.log("Password:", password);
+    console.log("Card Number:", cardNumber);
+    console.log("CVV:", cvv);
+    console.log("Expiry:", expiry);
+    alert("Signup successful!");
   };
 
   render() {
+    const { email, password, cardNumber, cvv, expiry, showPassword } =
+      this.state;
     return (
-      <div className="signup-container">
-        <div className="signup-form-container">
-          <h2 className="text-center">Sign Up</h2>
-          <form onSubmit={this.handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                className="form-control"
-                id="name"
-                name="name"
-                value={this.state.name}
-                onChange={this.handleChange}
-                placeholder="Enter your name"
-                required
-              />
+      <div className="login-container">
+        <div className="inner-box">
+          <img src={`${process.env.PUBLIC_URL}/login.png`} alt="" />
+          <div className="right-panel">
+            <div className="title-text">
+              Get Started at
+              <p>Upstarters</p>
             </div>
-            <div className="form-group">
-              <label htmlFor="name">Phone Number</label>
-              <input
-                type="text"
-                className="form-control"
-                id="phone"
-                name="phone"
-                value={this.state.phone}
-                onChange={this.handleChange}
-                placeholder="Enter your Phone Number"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="email">Email address</label>
-              <input
-                type="email"
-                className="form-control"
-                id="email"
-                name="email"
-                value={this.state.email}
-                onChange={this.handleChange}
-                placeholder="Enter email"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                className="form-control"
-                id="password"
-                name="password"
-                value={this.state.password}
-                onChange={this.handleChange}
-                placeholder="Enter password"
-                required
-              />
-            </div>
-            <div className="text-center">
-              <button type="submit" className="btn btn-success btn-block">
-                Sign Up
-              </button>
-            </div>
-          </form>
-          <div className="text-center mt-3">
-            <p>
-              Already have an account? <a href="#">Log In</a>
-            </p>
+            <form onSubmit={this.handleSubmit}>
+              <div className="credentials">
+                <div className="email">
+                  <svg
+                    width="18"
+                    height="15"
+                    viewBox="0 0 18 15"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M16.1719 0.982422H2.25C1.29287 0.982422 0.518467 1.76553 0.518467 2.72266L0.509766 13.1641C0.509766 14.1212 1.29287 14.9043 2.25 14.9043H16.1719C17.129 14.9043 17.9121 14.1212 17.9121 13.1641V2.72266C17.9121 1.76553 17.129 0.982422 16.1719 0.982422ZM16.1719 4.46289L9.21094 8.81348L2.25 4.46289V2.72266L9.21094 7.07324L16.1719 2.72266V4.46289Z"
+                      fill="black"
+                    />
+                  </svg>
+                  <div className="input-holder">
+                    <label htmlFor="email">Email</label>
+                    <input
+                      type="text"
+                      name="email"
+                      placeholder="example@gmail.com"
+                      value={this.state.email}
+                      onChange={this.handleChange}
+                    />
+                  </div>
+                </div>
+                <div className="pass">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7.42842 12.4889V13.1415C7.42842 13.3146 7.35966 13.4806 7.23728 13.603C7.1149 13.7253 6.94891 13.7941 6.77583 13.7941H5.47067V14.4467C5.47067 14.7928 5.33316 15.1248 5.08839 15.3696C4.84363 15.6143 4.51165 15.7518 4.1655 15.7518H1.55517C1.20902 15.7518 0.877041 15.6143 0.632274 15.3696C0.387508 15.1248 0.25 14.7928 0.25 14.4467V12.7591C0.250074 12.413 0.387631 12.0811 0.632414 11.8363L5.68341 6.78535C5.3737 5.7337 5.40292 4.61123 5.76693 3.57711C6.13093 2.54299 6.81125 1.64971 7.71141 1.02392C8.61157 0.398134 9.68589 0.0716033 10.782 0.0906305C11.8782 0.109658 12.9405 0.473277 13.8184 1.12993C14.6963 1.78658 15.3452 2.70294 15.6731 3.74906C16.001 4.79519 15.9913 5.918 15.6452 6.95827C15.2992 7.99854 14.6345 8.90349 13.7453 9.54479C12.8561 10.1861 11.7876 10.5312 10.6913 10.5312H9.38486V11.8363C9.38486 12.0094 9.31611 12.1754 9.19373 12.2978C9.07134 12.4202 8.90535 12.4889 8.73228 12.4889H7.42711H7.42842ZM11.9965 5.31051C12.3427 5.31051 12.6746 5.173 12.9194 4.92824C13.1642 4.68347 13.3017 4.3515 13.3017 4.00534C13.3017 3.65919 13.1642 3.32722 12.9194 3.08245C12.6746 2.83769 12.3427 2.70018 11.9965 2.70018C11.6503 2.70018 11.3184 2.83769 11.0736 3.08245C10.8288 3.32722 10.6913 3.65919 10.6913 4.00534C10.6913 4.3515 10.8288 4.68347 11.0736 4.92824C11.3184 5.173 11.6503 5.31051 11.9965 5.31051Z"
+                      fill="black"
+                    />
+                  </svg>
+                  <div className="input-holder">
+                    <label htmlFor="pass">Password</label>
+                    <input
+                      type={this.state.showPassword ? "text" : "password"}
+                      name="password"
+                      placeholder="Enter your password"
+                      value={this.state.password}
+                      onChange={this.handleChange}
+                    />
+                  </div>
+                  <div
+                    className="showPassword"
+                    onClick={this.togglePasswordVisibility}
+                  >
+                    <svg
+                      width="14"
+                      height="13"
+                      viewBox="0 0 14 13"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g clip-path="url(#clip0_14_190)">
+                        <path
+                          d="M8.83197 6.37122C8.83197 6.90006 8.62189 7.40725 8.24794 7.7812C7.87398 8.15515 7.3668 8.36523 6.83795 8.36523C6.30911 8.36523 5.80192 8.15515 5.42797 7.7812C5.05402 7.40725 4.84393 6.90006 4.84393 6.37122C4.84393 5.84237 5.05402 5.33518 5.42797 4.96123C5.80192 4.58728 6.30911 4.3772 6.83795 4.3772C7.3668 4.3772 7.87398 4.58728 8.24794 4.96123C8.62189 5.33518 8.83197 5.84237 8.83197 6.37122Z"
+                          fill="#2F2F2F"
+                        />
+                        <path
+                          d="M0.457031 6.37109C0.457031 6.37109 2.84985 1.98425 6.83789 1.98425C10.8259 1.98425 13.2188 6.37109 13.2188 6.37109C13.2188 6.37109 10.8259 10.7579 6.83789 10.7579C2.84985 10.7579 0.457031 6.37109 0.457031 6.37109ZM6.83789 9.16272C7.57828 9.16272 8.28834 8.8686 8.81187 8.34507C9.3354 7.82154 9.62952 7.11148 9.62952 6.37109C9.62952 5.63071 9.3354 4.92065 8.81187 4.39712C8.28834 3.87358 7.57828 3.57947 6.83789 3.57947C6.09751 3.57947 5.38744 3.87358 4.86391 4.39712C4.34038 4.92065 4.04626 5.63071 4.04626 6.37109C4.04626 7.11148 4.34038 7.82154 4.86391 8.34507C5.38744 8.8686 6.09751 9.16272 6.83789 9.16272Z"
+                          fill="#2F2F2F"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_14_190">
+                          <rect
+                            width="12.7617"
+                            height="12.7617"
+                            fill="white"
+                            transform="translate(0.457031 -0.00976562)"
+                          />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </div>
+                </div>
+                <div className="card">
+                  <svg
+                    id="Layer_1"
+                    data-name="Layer 1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 122.88 78.22"
+                  >
+                    <defs></defs>
+                    <title>credit-card-payment</title>
+                    <path
+                      class="cls-1"
+                      d="M11.24,58h17V62.1h-17V58Zm75.4-13A9.77,9.77,0,0,1,94.51,49a9.85,9.85,0,1,1,0,11.76A9.84,9.84,0,1,1,86.64,45Zm29.48,29.29A2.94,2.94,0,0,0,119,71.48V34H3.9V71.48a2.64,2.64,0,0,0,.82,2,2.87,2.87,0,0,0,2,.85ZM6.74,78.2a6.55,6.55,0,0,1-4.76-2,6.58,6.58,0,0,1-2-4.75V6.74A6.72,6.72,0,0,1,6.74,0H116.12a6.76,6.76,0,0,1,6.76,6.74V71.48a6.68,6.68,0,0,1-2,4.75,6.81,6.81,0,0,1-4.77,2q-54.74,0-109.38,0ZM3.9,14.56H119V6.73a2.75,2.75,0,0,0-.87-2,2.81,2.81,0,0,0-2-.87H6.74a2.8,2.8,0,0,0-2,.87,2.76,2.76,0,0,0-.82,2v7.83ZM36.09,58H64.38V62.1H36.09V58Z"
+                    />
+                  </svg>
+                  <div className="input-holder">
+                    <label htmlFor="cardNumber">Card Number</label>
+                    <input
+                      type="text"
+                      name="cardNumber"
+                      placeholder="XXXX-XXXX-XXXX-XXXX"
+                      value={this.state.cardNumber}
+                      onChange={this.handleChange}
+                      maxLength="19"
+                    />
+                  </div>
+                </div>
+                <div className="cvv">
+                  <svg
+                    id="Layer_1"
+                    data-name="Layer 1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 122.88 78.22"
+                  >
+                    <defs></defs>
+                    <title>credit-card-payment</title>
+                    <path
+                      class="cls-1"
+                      d="M11.24,58h17V62.1h-17V58Zm75.4-13A9.77,9.77,0,0,1,94.51,49a9.85,9.85,0,1,1,0,11.76A9.84,9.84,0,1,1,86.64,45Zm29.48,29.29A2.94,2.94,0,0,0,119,71.48V34H3.9V71.48a2.64,2.64,0,0,0,.82,2,2.87,2.87,0,0,0,2,.85ZM6.74,78.2a6.55,6.55,0,0,1-4.76-2,6.58,6.58,0,0,1-2-4.75V6.74A6.72,6.72,0,0,1,6.74,0H116.12a6.76,6.76,0,0,1,6.76,6.74V71.48a6.68,6.68,0,0,1-2,4.75,6.81,6.81,0,0,1-4.77,2q-54.74,0-109.38,0ZM3.9,14.56H119V6.73a2.75,2.75,0,0,0-.87-2,2.81,2.81,0,0,0-2-.87H6.74a2.8,2.8,0,0,0-2,.87,2.76,2.76,0,0,0-.82,2v7.83ZM36.09,58H64.38V62.1H36.09V58Z"
+                    />
+                  </svg>
+                  <div className="input-holder">
+                    <label htmlFor="cardNumber">CVV</label>
+                    <input
+                      type="text"
+                      name="cvv"
+                      placeholder="XXX"
+                      value={this.state.cvv}
+                      onChange={this.handleChange}
+                      maxLength="3"
+                    />
+                  </div>
+                </div>
+                <div className="expiry">
+                  <svg
+                    id="Layer_1"
+                    data-name="Layer 1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 122.88 78.22"
+                  >
+                    <defs></defs>
+                    <title>credit-card-payment</title>
+                    <path
+                      class="cls-1"
+                      d="M11.24,58h17V62.1h-17V58Zm75.4-13A9.77,9.77,0,0,1,94.51,49a9.85,9.85,0,1,1,0,11.76A9.84,9.84,0,1,1,86.64,45Zm29.48,29.29A2.94,2.94,0,0,0,119,71.48V34H3.9V71.48a2.64,2.64,0,0,0,.82,2,2.87,2.87,0,0,0,2,.85ZM6.74,78.2a6.55,6.55,0,0,1-4.76-2,6.58,6.58,0,0,1-2-4.75V6.74A6.72,6.72,0,0,1,6.74,0H116.12a6.76,6.76,0,0,1,6.76,6.74V71.48a6.68,6.68,0,0,1-2,4.75,6.81,6.81,0,0,1-4.77,2q-54.74,0-109.38,0ZM3.9,14.56H119V6.73a2.75,2.75,0,0,0-.87-2,2.81,2.81,0,0,0-2-.87H6.74a2.8,2.8,0,0,0-2,.87,2.76,2.76,0,0,0-.82,2v7.83ZM36.09,58H64.38V62.1H36.09V58Z"
+                    />
+                  </svg>
+                  <div className="input-holder">
+                    <label htmlFor="cardNumber">Expiry</label>
+                    <input
+                      type="text"
+                      name="expiry"
+                      placeholder="MM/YY"
+                      value={this.state.expiry}
+                      onChange={this.handleChange}
+                      maxLength="5"
+                    />
+                  </div>
+                </div>
+                <button type="submit" className="signup-button">
+                  SignUp
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>

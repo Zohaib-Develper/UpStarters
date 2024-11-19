@@ -1,8 +1,10 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import Category from "../Category/Category";
+import { useAuth } from "../../utils/AuthContext";
 
 const Navbar = () => {
+  const { user, logout } = useAuth();
   const { pathname } = useLocation();
   if (pathname.includes("signup") || pathname.includes("login")) return "";
 
@@ -71,24 +73,30 @@ const Navbar = () => {
                   style={{ boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)" }}
                 />
               </div>
-              <div className="d-flex ms-auto mt-3">
-                <Link to="/login" className="nav-button">
-                  <button
-                    className="btn btn-outline-success me-2 d-flex align-items-center justify-content-center"
-                    style={{ height: "33px" }}
-                  >
-                    Log In
-                  </button>
-                </Link>
-                <Link to="/signup" className="nav-button">
-                  <button
-                    className="btn btn-success d-flex align-items-center justify-content-center"
-                    style={{ height: "33px" }}
-                  >
-                    Sign Up
-                  </button>
-                </Link>
-              </div>
+              {user ? (
+                <button className="btn btn-danger" onClick={logout}>
+                  Logout{" "}
+                </button>
+              ) : (
+                <div className="d-flex ms-auto mt-3">
+                  <Link to="/login" className="nav-button">
+                    <button
+                      className="btn btn-outline-success me-2 d-flex align-items-center justify-content-center"
+                      style={{ height: "33px" }}
+                    >
+                      Log In
+                    </button>
+                  </Link>
+                  <Link to="/signup" className="nav-button">
+                    <button
+                      className="btn btn-success d-flex align-items-center justify-content-center"
+                      style={{ height: "33px" }}
+                    >
+                      Sign Up
+                    </button>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>

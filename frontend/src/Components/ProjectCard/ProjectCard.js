@@ -1,28 +1,30 @@
 import React from "react";
-import "./ProjectCard.css"; // Ensure to import your CSS file
-
+import "./ProjectCard.css";
+import { useNavigate } from "react-router-dom";
 const ProjectCard = ({
+  id,
   title,
   creatorName,
   description,
-  fundingGoal,
-  currentFunding,
+  category,
   imageUrl,
 }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/project/${id}`); // Navigate to the project details page using the project ID
+  };
   return (
-    <div className="card" style={{ width: "18rem", margin: "12px" }}>
-      <img src={imageUrl} className="card-img-top" alt={title} />
-      <div className="card-body">
-        <h5 className="card-title">{title}</h5>
-        <p className="card-text">{creatorName}</p>
-        <p className="card-text">{description}</p>
-        <p>
-          Funding Goal: ${fundingGoal} <br />
-          Current Funding: ${currentFunding}
-        </p>
-        <a href="#" className="btn btn-success">
-          View Project
-        </a>
+    <div className="project-card" onClick={handleClick}>
+      <div className="project-image">
+        <img src={imageUrl} alt={title} />
+        <div className="partition"></div>
+      </div>
+      <div className="project-info">
+        <h5 className="project-title">{title}</h5>
+        <p className="project-description">{description}</p>
+        <p className="project-creator">By: {creatorName}</p>
+        <p className="project-category">Category: {category}</p>
       </div>
     </div>
   );
