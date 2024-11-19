@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ProjectCard from "../ProjectCard/ProjectCard";
-
+import "./ProjectList.css"
 const ProjectList = () => {
   const [projects] = useState([
     {
@@ -8,8 +8,7 @@ const ProjectList = () => {
       title: "Project A",
       creatorName: "Mamoon Ahmad",
       description: "An amazing project that will change the world.",
-      fundingGoal: 5000,
-      currentFunding: 2500,
+      category:"Technology",
       imageUrl: "https://via.placeholder.com/300",
     },
     {
@@ -17,8 +16,7 @@ const ProjectList = () => {
       title: "Project B",
       creatorName: "Mamoon Ahmad",
       description: "An amazing project that will change the world.",
-      fundingGoal: 5000,
-      currentFunding: 2500,
+      category:"Technology",
       imageUrl: "https://via.placeholder.com/300",
     },
     {
@@ -26,8 +24,7 @@ const ProjectList = () => {
       title: "Project C",
       creatorName: "Mamoon Ahmad",
       description: "An amazing project that will change the world.",
-      fundingGoal: 5000,
-      currentFunding: 2500,
+      category:"Technology",
       imageUrl: "https://via.placeholder.com/300",
     },
     {
@@ -35,8 +32,7 @@ const ProjectList = () => {
       title: "Project D",
       creatorName: "Mamoon Ahmad",
       description: "An amazing project that will change the world.",
-      fundingGoal: 5000,
-      currentFunding: 2500,
+      category:"Technology",
       imageUrl: "https://via.placeholder.com/300",
     },
     {
@@ -44,22 +40,20 @@ const ProjectList = () => {
       title: "Project E",
       creatorName: "Mamoon Ahmad",
       description: "An amazing project that will change the world.",
-      fundingGoal: 5000,
-      currentFunding: 2500,
+      category:"Technology",
       imageUrl: "https://via.placeholder.com/300",
     },
   ]);
 
   return (
-    <div className="project-list d-flex flex-wrap justify-content-start">
+    <div className="project-list">
       {projects.map((project) => (
         <ProjectCard
           key={project.id}
           title={project.title}
           creatorName={project.creatorName}
           description={project.description}
-          fundingGoal={project.fundingGoal}
-          currentFunding={project.currentFunding}
+          category={project.category}
           imageUrl={project.imageUrl}
         />
       ))}
