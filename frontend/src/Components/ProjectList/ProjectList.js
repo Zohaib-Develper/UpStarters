@@ -9,6 +9,8 @@ const ProjectList = () => {
       creatorName: "Mamoon Ahmad",
       description: "An amazing project that will change the world.",
       category:"Technology",
+      FundsRequired:"10000 Rs",
+      FundsCollected:"1000 Rs",
       imageUrl: "https://via.placeholder.com/300",
     },
     {
@@ -17,6 +19,8 @@ const ProjectList = () => {
       creatorName: "Mamoon Ahmad",
       description: "An amazing project that will change the world.",
       category:"Technology",
+      FundsRequired:"10000 Rs",
+      FundsCollected:"1000 Rs",
       imageUrl: "https://via.placeholder.com/300",
     },
     {
@@ -25,6 +29,8 @@ const ProjectList = () => {
       creatorName: "Mamoon Ahmad",
       description: "An amazing project that will change the world.",
       category:"Technology",
+      FundsRequired:"10000 Rs",
+      FundsCollected:"1000 Rs",
       imageUrl: "https://via.placeholder.com/300",
     },
     {
@@ -33,6 +39,8 @@ const ProjectList = () => {
       creatorName: "Mamoon Ahmad",
       description: "An amazing project that will change the world.",
       category:"Technology",
+      FundsRequired:"10000 Rs",
+      FundsCollected:"1000 Rs",
       imageUrl: "https://via.placeholder.com/300",
     },
     {
@@ -41,6 +49,8 @@ const ProjectList = () => {
       creatorName: "Mamoon Ahmad",
       description: "An amazing project that will change the world.",
       category:"Technology",
+      FundsRequired:"10000 Rs",
+      FundsCollected:"1000 Rs",
       imageUrl: "https://via.placeholder.com/300",
     },
   ]);
@@ -49,13 +59,16 @@ const ProjectList = () => {
     <div className="project-list">
       {projects.map((project) => (
         <ProjectCard
-          key={project.id}
-          title={project.title}
-          creatorName={project.creatorName}
-          description={project.description}
-          category={project.category}
-          imageUrl={project.imageUrl}
-        />
+        key={project.id}
+        id={project.id}  // Add this line
+        title={project.title}
+        creatorName={project.creatorName}
+        description={project.description}
+        category={project.category}
+        imageUrl={project.imageUrl}
+        FundsRequired={project.FundsRequired}
+        FundsCollected={project.FundsCollected}
+      />
       ))}
     </div>
   );

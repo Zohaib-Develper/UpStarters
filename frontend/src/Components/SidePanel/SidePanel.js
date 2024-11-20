@@ -1,7 +1,7 @@
 import React from "react";
 import "./SidePanel.css";
 import { useAuth } from "../../utils/AuthContext";
-const SidePanel = ({ isOpen, closePanel }) => {
+const SidePanel = ({ isOpen, user }) => {
   const { logout } = useAuth();
   return (
     <div className={`side-panel ${isOpen ? "open" : ""}`}>
@@ -13,8 +13,8 @@ const SidePanel = ({ isOpen, closePanel }) => {
           </svg>
         </div>
         <div className="account-name">
-          <div className="first-name">Account</div>
-          <div className="last-name">Name</div>
+          <div className="first-name">{user?.firstName || 'Account'}</div>
+          <div className="last-name">{user?.lastName || 'Name'}</div>
         </div>
       </div>
 
