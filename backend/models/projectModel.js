@@ -13,6 +13,11 @@ const projectSchema = new mongoose.Schema({
         type: String,
         minlength: [50, 'Descripton length must be graetor than 50'],
     },
+    category: {
+        type: String,
+        enum: ['Technology', 'Art', 'Design', 'Music', 'Film', 'Food', 'Gaming', 'Photography', 'Fashion', 'Health', 'Sports', 'Comics', 'Education'],
+        required: [true, 'Please enter project category.']
+    },    
     investmentGoal: {
         type: Number,
         required: true

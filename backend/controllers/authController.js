@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
 const AppError = require('./../utils/appError');
 const catchAync = require('./../utils/catchAsync');
+const { promisify } = require("util");
 
 
 const GetToken = (id) => {
@@ -34,8 +35,8 @@ const auth = nodemailer.createTransport({
     secure: true,
     port: 465,
     auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASS,
+        user: "upstarterss@gmail.com",
+        pass: "ziyi grtp ltbe dpuj",
     },
 });
 
@@ -44,19 +45,21 @@ const generateOTP = () => Math.floor(100000 + Math.random() * 900000);
 
 // Signup with OTP
 exports.SignUp = catchAync(async (req, res, next) => {
-    const { name, password, confirmPassword, email } = req.body;
+    const { name, username, password, confirmPassword, email } = req.body;
 
     if (password !== confirmPassword) {
         return next(new AppError("Passwords do not match.", 400));
     }
 
-    // Generate OTP and save it temporarily
+    // Generate OTP and save user data temporarily
     const otp = generateOTP();
-    otpStore.set(email, otp);
+    otpStore.set(email, { otp, name, username, password, confirmPassword });
+
+    console.log("One time password is:", otp);
 
     // Send OTP email
     const mailOptions = {
-        from: process.env.EMAIL,
+        from: "upstarterss@gmail.com",
         to: email,
         subject: "Email Verification - OTP",
         text: `Your OTP for verification is: ${otp}`,
@@ -64,6 +67,7 @@ exports.SignUp = catchAync(async (req, res, next) => {
 
     auth.sendMail(mailOptions, async (error) => {
         if (error) {
+            console.log("Error is:", error);
             return next(new AppError("Error sending OTP email. Please try again later.", 500));
         }
 
@@ -78,61 +82,64 @@ exports.SignUp = catchAync(async (req, res, next) => {
 exports.VerifyOTP = catchAync(async (req, res, next) => {
     const { email, otp } = req.body;
 
-    const storedOTP = otpStore.get(email);
-    if (!storedOTP || storedOTP !== parseInt(otp)) {
+    const storedData = otpStore.get(email);
+
+    // Check if OTP and user data exist
+    if (!storedData || storedData.otp !== parseInt(otp)) {
         return next(new AppError("Invalid or expired OTP.", 400));
     }
 
+    const { name, username, password, confirmPassword } = storedData;
+
     // OTP is verified, create user
-    const { name, password } = req.body;
     const user = await User.create({
         name,
+        username,
         email,
         password,
-        confirmPassword: password,
+        confirmPassword
     });
 
-    // Clear OTP from the store
+    // Clear OTP and user data from the store
     otpStore.delete(email);
 
     CreateSendToken(user, 200, res);
 });
 
+exports.LogIn = catchAync(async (req, res, next) => {
+    const { username, password } = req.body
+    const user = await User.findOne({ username: username }).select('+password')
 
-exports.LogIn = catchAync (async (req, res, next) => {
-    const {email, password} = req.body
-    const user = await User.findOne({email : email})
-
-    if(!user)
-    {
+    if (!user) {
         return next(new AppError('User does not exists!😂', 400))
     }
 
-    if(!await user.CorrectPassword(password, user.password)){
+    if (!await user.CorrectPassword(password, user.password)) {
         return next(new AppError('Wrong password.🤬', 400))
     }
 
-    CreateSendToken(user, 200, res)   
+    CreateSendToken(user, 200, res)
 })
 
 
 exports.Protect = catchAync(async (req, res, next) => {
+
     let token;
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         token = req.headers.authorization.split(' ')[1];
     } else if (req.cookies && req.cookies.jwt) {
         token = req.cookies.jwt;
     }
-    
+
     if (!token) {
         return next(new AppError('You are not logged in! Please log in to get access.', 401))
     }
-    
+
     // Verify token
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET_KEY);
-    
+
     const currentUser = await User.findById(decoded.id);
-    
+
     if (!currentUser) {
         return next(new AppError('The user belonging to this token does not exist.', 401));
     }
@@ -144,20 +151,20 @@ exports.Protect = catchAync(async (req, res, next) => {
 
 
 exports.RestrictTo = (...roles) => { // Store parameters in an array
+
+    // console.log('--')
     return (req, res, next) => {
-        
-        
-        if (!roles.includes(req.user.role)) 
-            {
+
+        if (!roles.includes(req.user.role)) {
             return next(new AppError('You do not have permission to perform this action.', 403));
         }
-        
+
         next();
     };
 };
 
 exports.UpdatePassword = catchAync(async (req, res, next) => {
-    
+
     if (!req.body.oldpassword || !req.body.newpassword || !req.body.confirmnewpassword) {
         return next(new AppError('Please enter all fields!', 400));
     }

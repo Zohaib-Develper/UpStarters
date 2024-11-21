@@ -15,12 +15,17 @@ const userScheme = new mongoose.Schema({
     type: String,
     required: [true, "Please enter password"],
     minlength: [8, "Password length must be graetor than 8"],
-    // select : false
+    select : false
   },
   confirmPassword: {
     type: String,
     required: true,
-    // select : false
+    select : false
+  },
+  role: {
+    type: String,
+    default: 'user',
+    enum : ['admin', 'user']
   },
   email: {
     type: String,
@@ -60,6 +65,14 @@ userScheme.methods.PasswordChangedAfter = function (JWTTimestamp) {
   // False means the password was not changed after the JWT was issued
   return false;
 };
+
+userScheme.set('toJSON', {
+  transform: function(doc, ret) {
+      delete ret.password; 
+      delete ret.__v;
+      return ret;
+  }
+});
 
 const User = mongoose.model("User", userScheme);
 

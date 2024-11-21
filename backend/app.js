@@ -5,16 +5,17 @@ const userHandler = require('./routers/userRouter')
 const investmentHandler = require('./routers/investmentRouter')
 const investorHandler = require('./routers/investorRouter')
 
+
 const errorController = require('./controllers/errorController')
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res, next) => {
-    res.status(200).send("Hello SDA")
-})
+// app.get('/', (req, res, next) => {
+//     res.status(200).send("Hello SDA")
+// })
 
-
+// app.get('/api/project/all',authControler.Protect, authControler.RestrictTo('admin'), projectControler.All_Active_Projects)
 app.use('/api/project', projectHandler);
 app.use('/api/auth', userHandler)
 app.use('/api/me', userHandler)

@@ -5,13 +5,15 @@ const express = require('express')
 const router = express.Router();
 
 router.route('/').get(projectController.All_Active_Projects).post(authController.Protect, projectController.AddProject)
-router.route('/:id').get(projectController.GetProjectByID).patch(authController.Protect, authController.RestrictTo('investor'), projectController.UpdateProject).delete(authController.Protect, projectController.DeleteProject);
 router.route('/all').get(authController.Protect, authController.RestrictTo('admin'), projectController.All_Projects)
+router.route('/:id').get(projectController.GetProjectByID).patch(authController.Protect, projectController.UpdateProject).delete(authController.Protect, projectController.DeleteProject);
+
+
 
 
 router.route('/:id/approve').get(authController.Protect, authController.RestrictTo('admin'), projectController.ApproveProject)
 router.route('/:id/reject').get(authController.Protect, authController.RestrictTo('admin'), projectController.RejectProject)
 
-router.route('/:id/progress').get(authController.Protect, authController.RestrictTo('creator', 'admin'), projectController.ProjectProgress)
+router.route('/:id/progress').get(authController.Protect, projectController.ProjectProgress)
 
 module.exports = router

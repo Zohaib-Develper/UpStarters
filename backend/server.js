@@ -1,15 +1,12 @@
-const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const app = require('./app');
 
 dotenv.config({ path: './config.env' });
 
-// Replace the password in the database connection string
-const DB = process.env.DATABASE_NAME.replace('<PASSWORD>', process.env.DATABASE_BASE_PASSWORD);
+// const DB = process.env.DATABASE_NAME.replace('<PASSWORD>', process.env.DATABASE_BASE_PASSWORD);
 
-// Connect to MongoDB Atlas
-mongoose.connect(DB)
+mongoose.connect("mongodb://localhost:27017/UpStarters")
   .then(() => {
     console.log("DATABASE CONNECTED SUCCESSFULLY!");
   })
@@ -18,7 +15,7 @@ mongoose.connect(DB)
   });
 
 // Start the server
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 app.listen(port, () => {
   console.log(`App is live on port ${port}`);
 });

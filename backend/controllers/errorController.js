@@ -20,6 +20,12 @@ const sendError = (err, res) => {
     });
 }
 
+// const tokenExpired = (error) => {
+//     err.message = "Please login again!"
+//     err.statusCode = 400;
+//     return new AppError(err.message, err.statusCode)
+// }
+
 
 module.exports = (err, req, res, next) => {
     // Set default values in case they are not defined
@@ -30,5 +36,7 @@ module.exports = (err, req, res, next) => {
     let error = { ...err };
     if (error.name === 'CastError') error = HandleCastError(error);
     if (error.code === 1100) error = HandleDuplicateValues(error);
+    // if (error.name === "TokenExpiredError") error = tokenExpired(errpr);
+    
     sendError(err, res);
 };

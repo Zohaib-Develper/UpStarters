@@ -1,5 +1,6 @@
 const Project = require('./../models/projectModel');
 const catchAync = require('./../utils/catchAsync')
+const AppError = require('./../utils/appError')
 
 exports.AddProject = catchAync(async (req, res, next) => {
 
@@ -9,8 +10,10 @@ exports.AddProject = catchAync(async (req, res, next) => {
     title: req.body.title,
     summary: req.body.summary,
     description: req.body.description,
+    category: req.body.category,
     investmentGoal: req.body.investmentGoal,
     equityOffered: req.body.equityOffered,
+    startsFrom: req.body.startsFrom,
     fundsRaised: req.body.fundsRaised,
     creator: creator_id
   });
@@ -24,7 +27,7 @@ exports.AddProject = catchAync(async (req, res, next) => {
 
 exports.All_Active_Projects = catchAync(async (req, res, next) => {
 
-  const projects = await Project.find({ status: 'active' })
+  const projects = await Project.find({status:'active'})
 
   res.status(200).json({
     status: "success",
@@ -35,7 +38,6 @@ exports.All_Active_Projects = catchAync(async (req, res, next) => {
 });
 
 exports.All_Projects = catchAync(async (req, res, next) => {
-
   const projects = await Project.find()
 
   res.status(200).json({
@@ -49,12 +51,14 @@ exports.GetProjectByID = catchAync(async (req, res, next) => {
 
   const project = await Project.findById({ _id: req.params.id })
 
-  if (!project) {
+  if (!project)
     return next(new AppError('Project not found!', 400))
-  }
+
+  if (project.status !== 'active')
+    return next(new AppError('Cannot see this project! Come back lator!'))
 
   res.status(200).json({
-    status: "Sucess",
+    status: "Success",
     data: project
   })
 
@@ -115,7 +119,9 @@ exports.ProjectProgress = catchAync(async (req, res, next) => {
     return next(new AppError("Project not found!", 400))
   }
 
-  if (project.creator.toString() !== req.user._id.toString()) {
+  console.log(project.creator.toString())
+  console.log(req.user._id.toString())
+  if ((project.creator.toString() !== req.user._id.toString()) && req.user.role != 'admin') {
     return next(new AppError("You do not have permission!", 400))
   }
 
