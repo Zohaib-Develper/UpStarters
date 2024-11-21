@@ -1,0 +1,90 @@
+.project-details-information{
+    margin: 20px 20px;
+}
+.project-details-header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.project-details-content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+}
+.project-details-image {
+    width: 600px;
+    height: 300px;
+    overflow: hidden;
+    margin-top: 10px;
+  }
+  
+.project-details-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+.green-line{
+    margin-top: 5px;
+    height: 5px;
+    width: 100%;
+    background-color: #028858;
+}
+.project-details-right{
+    margin-left: 25px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 300px;
+}
+.funds-required{
+    margin-top: 10px;
+    font-size: 2rem;
+    color: #028858;
+}
+.funds-collected{
+    font-size: 0.6rem;
+    margin-left: 5px;
+    color: #6f6d6d;
+}
+.project-details-creator{
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+.user-profile{
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background-color: #ececec;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.user-profile svg{
+    height: 8px;
+    width: 8px;
+}
+.user-name{
+    font-size: x-small;
+    margin-left: 5px;
+    color:#6f6d6d;
+}
+.project-details-category{
+    font-size: x-small;
+    color:#6f6d6d;
+    margin-left: 5px;
+    padding-top: 5px;
+}
+.back-project-button{
+    margin-top: 20px;
+    border: none;
+    background-color: #028858;
+    color: white;
+    height: 35px;
+    font-size: x-small;
+}

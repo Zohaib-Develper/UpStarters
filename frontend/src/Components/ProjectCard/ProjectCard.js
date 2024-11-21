@@ -7,12 +7,25 @@ const ProjectCard = ({
   creatorName,
   description,
   category,
+  FundsRequired,
+  FundsCollected,
   imageUrl,
 }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/project/${id}`); // Navigate to the project details page using the project ID
+    navigate(`/project/${id}`, { 
+      state: { 
+        id,
+        title,
+        creatorName,
+        description,
+        category,
+        FundsRequired,
+        FundsCollected,
+        imageUrl
+      }
+    });
   };
   return (
     <div className="project-card" onClick={handleClick}>
