@@ -1,0 +1,100 @@
+/* General body styling */
+body {
+  background-color: #2c3e50; /* Dark background for professional look */
+  font-family: "Roboto", sans-serif; /* Modern admin-style font */
+}
+
+/* Admin login container styling */
+.admin-login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+}
+
+/* Login card styling */
+.login-card {
+  background: #ffffff; /* White card */
+  border-radius: 12px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25); /* Subtle shadow */
+}
+
+/* Login header styling */
+.login-header {
+  margin-bottom: 1.5rem;
+}
+
+.logo-placeholder {
+  display: inline-block;
+  background: #28a745; /* Green color */
+  color: #ffffff;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  border-radius: 50%;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0 auto 10px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #28a745; /* Green */
+}
+
+/* Text styling */
+.text-green {
+  color: #28a745; /* Professional green accent color */
+}
+
+/* Form input styles */
+.form-control {
+  border: 2px solid #28a745; /* Green border */
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.form-control:focus {
+  border-color: #218838; /* Darker green on focus */
+  box-shadow: none; /* No shadow on focus */
+}
+
+/* Button styling */
+.btn-green {
+  background-color: #28a745; /* Green */
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btn-green:hover {
+  background-color: #218838; /* Darker green */
+  color: #ffffff;
+}
+
+/* Alert styling */
+.alert {
+  font-size: 14px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
