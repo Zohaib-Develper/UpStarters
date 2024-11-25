@@ -9,8 +9,9 @@ router.route('/').get(AuthController.Protect, UserController.GetMe).patch(AuthCo
 router.route('/signup').post(AuthController.SignUp)
 router.route('/verify-otp').post(AuthController.VerifyOTP)
 router.route('/login').post(AuthController.LogIn)
-router.route('/:id').get(UserController.GetUserById)
 router.route('/updatepassword').patch(AuthController.Protect, AuthController.UpdatePassword)
+router.route('/logout').get(AuthController.Protect, AuthController.LogOut)
+router.route('/:id').get(UserController.GetUserById)
 
 
 module.exports = router

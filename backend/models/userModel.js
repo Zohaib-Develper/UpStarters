@@ -15,12 +15,13 @@ const userScheme = new mongoose.Schema({
     type: String,
     required: [true, "Please enter password"],
     minlength: [8, "Password length must be graetor than 8"],
-    // select : false
+    select: false,
   },
-  confirmPassword: {
+
+  role: {
     type: String,
-    required: true,
-    // select : false
+    default: "user",
+    enum: ["admin", "user"],
   },
   email: {
     type: String,
@@ -33,7 +34,6 @@ userScheme.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
   this.password = await bcrypt.hash(this.password, 12);
-  this.confirmPassword = undefined;
 
   if (!this.isNew) this.PasswordChangedAt = Date.now() - 1000;
   next();
@@ -60,6 +60,14 @@ userScheme.methods.PasswordChangedAfter = function (JWTTimestamp) {
   // False means the password was not changed after the JWT was issued
   return false;
 };
+
+userScheme.set("toJSON", {
+  transform: function (doc, ret) {
+    delete ret.password;
+    delete ret.__v;
+    return ret;
+  },
+});
 
 const User = mongoose.model("User", userScheme);
 

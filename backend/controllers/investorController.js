@@ -1,4 +1,3 @@
-// const Investor = require('./../models/investorModel')   
 const AppError = require('./../utils/appError')
 const catchAync = require('./../utils/catchAsync')
 const User = require('../models/userModel')
@@ -30,7 +29,7 @@ exports.GetInvestmentdata = catchAync(async (req, res, next) => {
 
 exports.AllInvestors = catchAync(async (req, res, next) => {
 
-    const investors = await Investment.find()
+    const investors = await Investments.find()
         .populate('investor', 'name email')
         .populate('project', 'title description')
         .select('amount equityAcquired investmentDate');
@@ -51,4 +50,3 @@ exports.AllInvestors = catchAync(async (req, res, next) => {
         },
     });
 });
-

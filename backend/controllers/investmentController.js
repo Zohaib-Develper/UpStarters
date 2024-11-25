@@ -7,13 +7,19 @@ exports.InvestInProject = catchAync(async (req, res, next) => {
 
     const project = await Project.findById(req.params.id)
 
-    if (!project) {
+    if (!project)
         return next(new AppError('No Project found!', 404))
-    }
 
-    if (req.body.amount < 0) {
+    if (project.status !== 'active')
+        return next(new AppError('Cannot invest now in this project! Please come back later!', 400))
+
+    if (req.body.amount < 0) 
         return next(new AppError('Please enter valid amount!', 400))
-    }
+
+    if (project.fundsRaised >= project.investmentGoal) {
+        await Project.findByIdAndUpdate(project._id, { fundsRaised: project.investmentGoal });
+        return next(new AppError('Investment goal already reached. No further funds are required!', 400));
+    }    
 
     await Project.findByIdAndUpdate(
         project._id,

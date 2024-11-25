@@ -1,26 +1,44 @@
 const Project = require('./../models/projectModel');
-const catchAync = require('./../utils/catchAsync')
+const catchAync = require('./../utils/catchAsync');
+const AppError = require('./../utils/appError');
+const { uploadOnCloudinary } = require('./../utils/cloudinary');
+const fs = require('fs'); // To delete local files
+
 
 exports.AddProject = catchAync(async (req, res, next) => {
+  if (!req.file) {
+    return next(new AppError('Please upload an image!', 400));
+  }
+  // Upload the image to Cloudinary
+  const url = await uploadOnCloudinary(req.file.path);
 
-  const creator_id = req.user._id
+  if (url)
+    fs.unlinkSync(req.file.path);
 
+  if (!url)
+    return next(new AppError('Cloudinary upload failed. Image URL is missing.', 500));
+
+  console.log("Body is:", req.body)
+  // Create the project with the Cloudinary URL
   const newProj = await Project.create({
     title: req.body.title,
     summary: req.body.summary,
     description: req.body.description,
+    category: req.body.category,
     investmentGoal: req.body.investmentGoal,
     equityOffered: req.body.equityOffered,
+    startsFrom: req.body.startsFrom,
     fundsRaised: req.body.fundsRaised,
-    creator: creator_id
+    creator: req.user._id,
+    image: url, // Save the Cloudinary URL in the database
   });
 
   res.status(201).json({
     status: "Success",
-    data: newProj
+    data: newProj,
   });
-
 });
+
 
 exports.All_Active_Projects = catchAync(async (req, res, next) => {
 
@@ -35,7 +53,6 @@ exports.All_Active_Projects = catchAync(async (req, res, next) => {
 });
 
 exports.All_Projects = catchAync(async (req, res, next) => {
-
   const projects = await Project.find()
 
   res.status(200).json({
@@ -49,12 +66,14 @@ exports.GetProjectByID = catchAync(async (req, res, next) => {
 
   const project = await Project.findById({ _id: req.params.id })
 
-  if (!project) {
+  if (!project)
     return next(new AppError('Project not found!', 400))
-  }
+
+  if (project.status !== 'active')
+    return next(new AppError('Cannot see this project! Come back lator!'))
 
   res.status(200).json({
-    status: "Sucess",
+    status: "Success",
     data: project
   })
 
@@ -115,7 +134,9 @@ exports.ProjectProgress = catchAync(async (req, res, next) => {
     return next(new AppError("Project not found!", 400))
   }
 
-  if (project.creator.toString() !== req.user._id.toString()) {
+  console.log(project.creator.toString())
+  console.log(req.user._id.toString())
+  if ((project.creator.toString() !== req.user._id.toString()) && req.user.role != 'admin') {
     return next(new AppError("You do not have permission!", 400))
   }
 

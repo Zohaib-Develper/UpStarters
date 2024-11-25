@@ -12,6 +12,11 @@ import SignUpPage from "./pages/SignUpPage";
 import { AuthProvider } from "./utils/AuthContext";
 import HomePage from "./pages/HomePage";
 import ProjectDetailsPage from "./pages/ProjectDetailsPage";
+import AdminLoginPage from "./pages/Admin/AdminLoginPage";
+import DashboardPage from "./pages/Admin/DashboardPage";
+import ProtectedRoute from "./utils/ProtectedRoute";
+import UsersPage from "./pages/Admin/UsersPage";
+import ProjectsPage from "./pages/Admin/ProjectsPage";
 //import ProtectedRoute from "./utils/ProtectedRoute";
 import CreateProject from "./Components/CreateProject/CreateProject";
 import ViewProjects from "./Components/ViewProjects/ViewProjects";
@@ -21,7 +26,7 @@ const App = () => {
   return (
     <AuthProvider>
       <Router>
-        <Navbar />
+        {/* <Navbar /> */}
         <Routes>
           {/* Public routes */}
 
@@ -35,11 +40,25 @@ const App = () => {
           <Route path="/settings" element={<Settings />} />
           {/* Protected routes */}
           {/* Admin routes */}
-    
+          <Route path="/admin/login" element={<AdminLoginPage />} />
+
+          <Route
+            path="/admin/dashboard"
+            element={<ProtectedRoute element={<DashboardPage />} />}
+          />
+          <Route
+            path="/admin/users"
+            element={<ProtectedRoute element={<UsersPage />} />}
+          />
+          <Route
+            path="/admin/projects"
+            element={<ProtectedRoute element={<ProjectsPage />} />}
+          />
+
           {/* Catch-all route for unmatched paths */}
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
-        <Footer />
+        {/* <Footer /> */}
       </Router>
     </AuthProvider>
   );

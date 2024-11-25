@@ -1,5 +1,6 @@
 const User = require('./../models/userModel')
 const catchAync = require('./../utils/catchAsync')
+const AppError = require('./../utils/appError')
 
 exports.GetUserById = catchAync(async (req, res, next) => {
 

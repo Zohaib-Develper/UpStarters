@@ -1,44 +1,31 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
-import SidePanel from "../components/SidePanel/SidePanel";
+import Sidebar from "../Components/Admin/Sidebar/Sidebar";
+import Header from "../Components/Admin/Header/Header";
 
-const ProtectedRoute = ({ element: Element, roles }) => {
-  const { user, logout } = useAuth();
+const ProtectedRoute = ({ element: Element }) => {
   const location = useLocation();
-  console.log(location);
+  let { user } = useAuth();
   if (!user) {
     // Redirect to login if not authenticated
     return <Navigate to="/users/login" state={{ from: location }} replace />;
-  } else if (!roles.includes(user.role)) {
-    // Redirect to unauthorized page if user does not have the right role
-    return <Navigate to="/users/login" replace />;
-  } else if (user.role == "admin")
+  } else if (user?.role == "admin") {
     return (
-      <>
-        <SidePanel />
-        <div className="md:ml-64"> {Element}</div>
-      </>
-    );
-  else if (
-    user.role == "user" &&
-    (location.pathname.includes("user") || location.pathname.includes("bills")) //User can only access user and bill paths
-  ) {
-    return (
-      <>
-        {" "}
-        <div className="flex justify-end">
-          <button
-            className="bg-red-500 p-3 rounded-lg text-white m-2"
-            onClick={() => {
-              logout();
-            }}
-          >
-            Logout
-          </button>
+      <div className="d-flex dashboard " style={{ backgroundColor: "#fff" }}>
+        <Sidebar />
+        <div className="flex-grow-1 p-0 bg-light main">
+          <Header />
+          {Element}
         </div>
-        <div className="md:ml-64"> {Element}</div>
-      </>
+      </div>
     );
+  } else if (
+    user.role == "user" &&
+    location.pathname.includes("user") //User can only access user and bill paths
+  ) {
+    return <div> NORMAL USER</div>;
+  } else {
+    return <Navigate to="/login" replace />;
   }
 };
 
