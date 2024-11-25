@@ -17,7 +17,11 @@ const projectSchema = new mongoose.Schema({
         type: String,
         enum: ['Technology', 'Art', 'Design', 'Music', 'Film', 'Food', 'Gaming', 'Photography', 'Fashion', 'Health', 'Sports', 'Comics', 'Education'],
         required: [true, 'Please enter project category.']
-    },    
+    },
+    image: {
+        type: String,
+        required: [true, 'Please Enter Project image']
+    },      
     investmentGoal: {
         type: Number,
         required: true

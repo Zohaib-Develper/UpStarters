@@ -1,11 +1,25 @@
 const Project = require('./../models/projectModel');
-const catchAync = require('./../utils/catchAsync')
-const AppError = require('./../utils/appError')
+const catchAync = require('./../utils/catchAsync');
+const AppError = require('./../utils/appError');
+const { uploadOnCloudinary } = require('./../utils/cloudinary');
+const fs = require('fs'); // To delete local files
+
 
 exports.AddProject = catchAync(async (req, res, next) => {
+  if (!req.file) {
+    return next(new AppError('Please upload an image!', 400));
+  }
+  // Upload the image to Cloudinary
+  const url = await uploadOnCloudinary(req.file.path);
 
-  const creator_id = req.user._id
+  if (url)
+    fs.unlinkSync(req.file.path);
 
+  if (!url)
+    return next(new AppError('Cloudinary upload failed. Image URL is missing.', 500));
+
+  console.log("Body is:", req.body)
+  // Create the project with the Cloudinary URL
   const newProj = await Project.create({
     title: req.body.title,
     summary: req.body.summary,
@@ -15,19 +29,20 @@ exports.AddProject = catchAync(async (req, res, next) => {
     equityOffered: req.body.equityOffered,
     startsFrom: req.body.startsFrom,
     fundsRaised: req.body.fundsRaised,
-    creator: creator_id
+    creator: req.user._id,
+    image: url, // Save the Cloudinary URL in the database
   });
 
   res.status(201).json({
     status: "Success",
-    data: newProj
+    data: newProj,
   });
-
 });
+
 
 exports.All_Active_Projects = catchAync(async (req, res, next) => {
 
-  const projects = await Project.find({status:'active'})
+  const projects = await Project.find({ status: 'active' })
 
   res.status(200).json({
     status: "success",

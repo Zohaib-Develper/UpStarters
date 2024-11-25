@@ -196,3 +196,18 @@ exports.UpdatePassword = catchAync(async (req, res, next) => {
         user
     });
 });
+
+exports.LogOut = catchAync(async (req, res, next) => {
+
+    res.cookie('jwt', 'logout', {
+        expires: new Date(Date.now() + 10),
+        httpOnly: true,
+        sameSite: 'strict',
+    });
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Logged out successfully!'
+    });
+
+})
