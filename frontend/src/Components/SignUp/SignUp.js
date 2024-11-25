@@ -74,6 +74,28 @@ export default class SignUp extends Component {
             </div>
             <form onSubmit={this.handleSubmit}>
               <div className="credentials">
+                <div class="name-container">
+                  <div class="user-first-name">
+                    <div class="input-holder">
+                      <label for="user-first-name">First Name</label>
+                      <input
+                        type="text"
+                        id="user-first-name"
+                        placeholder="Enter first name"
+                      />
+                    </div>
+                  </div>
+                  <div class="user-last-name">
+                    <div class="input-holder">
+                      <label for="user-last-name">Last Name</label>
+                      <input
+                        type="text"
+                        id="user-last-name"
+                        placeholder="Enter last name"
+                      />
+                    </div>
+                  </div>
+                </div>
                 <div className="email">
                   <svg
                     width="18"
@@ -176,54 +198,56 @@ export default class SignUp extends Component {
                     />
                   </div>
                 </div>
-                <div className="cvv">
-                  <svg
-                    id="Layer_1"
-                    data-name="Layer 1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 122.88 78.22">
-                    <defs></defs>
-                    <title>credit-card-payment</title>
-                    <path
-                      class="cls-1"
-                      d="M11.24,58h17V62.1h-17V58Zm75.4-13A9.77,9.77,0,0,1,94.51,49a9.85,9.85,0,1,1,0,11.76A9.84,9.84,0,1,1,86.64,45Zm29.48,29.29A2.94,2.94,0,0,0,119,71.48V34H3.9V71.48a2.64,2.64,0,0,0,.82,2,2.87,2.87,0,0,0,2,.85ZM6.74,78.2a6.55,6.55,0,0,1-4.76-2,6.58,6.58,0,0,1-2-4.75V6.74A6.72,6.72,0,0,1,6.74,0H116.12a6.76,6.76,0,0,1,6.76,6.74V71.48a6.68,6.68,0,0,1-2,4.75,6.81,6.81,0,0,1-4.77,2q-54.74,0-109.38,0ZM3.9,14.56H119V6.73a2.75,2.75,0,0,0-.87-2,2.81,2.81,0,0,0-2-.87H6.74a2.8,2.8,0,0,0-2,.87,2.76,2.76,0,0,0-.82,2v7.83ZM36.09,58H64.38V62.1H36.09V58Z"
-                    />
-                  </svg>
-                  <div className="input-holder">
-                    <label htmlFor="cardNumber">CVV</label>
-                    <input
-                      type="text"
-                      name="cvv"
-                      placeholder="XXX"
-                      value={this.state.cvv}
-                      onChange={this.handleChange}
-                      maxLength="3"
-                    />
+                <div class="expiry-cvv-container">
+                  <div className="cvv">
+                    <svg
+                      id="Layer_1"
+                      data-name="Layer 1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 122.88 78.22">
+                      <defs></defs>
+                      <title>credit-card-payment</title>
+                      <path
+                        class="cls-1"
+                        d="M11.24,58h17V62.1h-17V58Zm75.4-13A9.77,9.77,0,0,1,94.51,49a9.85,9.85,0,1,1,0,11.76A9.84,9.84,0,1,1,86.64,45Zm29.48,29.29A2.94,2.94,0,0,0,119,71.48V34H3.9V71.48a2.64,2.64,0,0,0,.82,2,2.87,2.87,0,0,0,2,.85ZM6.74,78.2a6.55,6.55,0,0,1-4.76-2,6.58,6.58,0,0,1-2-4.75V6.74A6.72,6.72,0,0,1,6.74,0H116.12a6.76,6.76,0,0,1,6.76,6.74V71.48a6.68,6.68,0,0,1-2,4.75,6.81,6.81,0,0,1-4.77,2q-54.74,0-109.38,0ZM3.9,14.56H119V6.73a2.75,2.75,0,0,0-.87-2,2.81,2.81,0,0,0-2-.87H6.74a2.8,2.8,0,0,0-2,.87,2.76,2.76,0,0,0-.82,2v7.83ZM36.09,58H64.38V62.1H36.09V58Z"
+                      />
+                    </svg>
+                    <div className="input-holder">
+                      <label htmlFor="cardNumber">CVV</label>
+                      <input
+                        type="text"
+                        name="cvv"
+                        placeholder="XXX"
+                        value={this.state.cvv}
+                        onChange={this.handleChange}
+                        maxLength="3"
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="expiry">
-                  <svg
-                    id="Layer_1"
-                    data-name="Layer 1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 122.88 78.22">
-                    <defs></defs>
-                    <title>credit-card-payment</title>
-                    <path
-                      class="cls-1"
-                      d="M11.24,58h17V62.1h-17V58Zm75.4-13A9.77,9.77,0,0,1,94.51,49a9.85,9.85,0,1,1,0,11.76A9.84,9.84,0,1,1,86.64,45Zm29.48,29.29A2.94,2.94,0,0,0,119,71.48V34H3.9V71.48a2.64,2.64,0,0,0,.82,2,2.87,2.87,0,0,0,2,.85ZM6.74,78.2a6.55,6.55,0,0,1-4.76-2,6.58,6.58,0,0,1-2-4.75V6.74A6.72,6.72,0,0,1,6.74,0H116.12a6.76,6.76,0,0,1,6.76,6.74V71.48a6.68,6.68,0,0,1-2,4.75,6.81,6.81,0,0,1-4.77,2q-54.74,0-109.38,0ZM3.9,14.56H119V6.73a2.75,2.75,0,0,0-.87-2,2.81,2.81,0,0,0-2-.87H6.74a2.8,2.8,0,0,0-2,.87,2.76,2.76,0,0,0-.82,2v7.83ZM36.09,58H64.38V62.1H36.09V58Z"
-                    />
-                  </svg>
-                  <div className="input-holder">
-                    <label htmlFor="cardNumber">Expiry</label>
-                    <input
-                      type="text"
-                      name="expiry"
-                      placeholder="MM/YY"
-                      value={this.state.expiry}
-                      onChange={this.handleChange}
-                      maxLength="5"
-                    />
+                  <div className="expiry">
+                    <svg
+                      id="Layer_1"
+                      data-name="Layer 1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 122.88 78.22">
+                      <defs></defs>
+                      <title>credit-card-payment</title>
+                      <path
+                        class="cls-1"
+                        d="M11.24,58h17V62.1h-17V58Zm75.4-13A9.77,9.77,0,0,1,94.51,49a9.85,9.85,0,1,1,0,11.76A9.84,9.84,0,1,1,86.64,45Zm29.48,29.29A2.94,2.94,0,0,0,119,71.48V34H3.9V71.48a2.64,2.64,0,0,0,.82,2,2.87,2.87,0,0,0,2,.85ZM6.74,78.2a6.55,6.55,0,0,1-4.76-2,6.58,6.58,0,0,1-2-4.75V6.74A6.72,6.72,0,0,1,6.74,0H116.12a6.76,6.76,0,0,1,6.76,6.74V71.48a6.68,6.68,0,0,1-2,4.75,6.81,6.81,0,0,1-4.77,2q-54.74,0-109.38,0ZM3.9,14.56H119V6.73a2.75,2.75,0,0,0-.87-2,2.81,2.81,0,0,0-2-.87H6.74a2.8,2.8,0,0,0-2,.87,2.76,2.76,0,0,0-.82,2v7.83ZM36.09,58H64.38V62.1H36.09V58Z"
+                      />
+                    </svg>
+                    <div className="input-holder">
+                      <label htmlFor="cardNumber">Expiry</label>
+                      <input
+                        type="text"
+                        name="expiry"
+                        placeholder="MM/YY"
+                        value={this.state.expiry}
+                        onChange={this.handleChange}
+                        maxLength="5"
+                      />
+                    </div>
                   </div>
                 </div>
                 <button type="submit" className="signup-button">

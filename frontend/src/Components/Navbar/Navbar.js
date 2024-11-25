@@ -38,7 +38,6 @@ const Navbar = () => {
   }, [isSidePanelOpen]);
 
   if (pathname.includes("signup") || pathname.includes("login")) return "";
-
   const togglePanel = (e) => {
     e.stopPropagation();
     setIsSidePanelOpen(!isSidePanelOpen);
@@ -85,7 +84,7 @@ const Navbar = () => {
               className="form-control border-0"
               aria-label="Search"
               style={{ boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)" }}
-            />
+            />  
           </div>
           {user ? (
             <div className="profile mt-3" onClick={togglePanel}>
@@ -117,6 +116,7 @@ const Navbar = () => {
       <SidePanel
         isOpen={isSidePanelOpen}
         closePanel={() => setIsSidePanelOpen(false)}
+        user = {user}
       />
       {/* Separate overlay div */}
       {isSidePanelOpen && (

@@ -58,9 +58,21 @@
   border-radius: 4.64062px;
   padding: 0 10px;
 }
+.name-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.user-first-name,
+.user-last-name {
+  flex: 1;
+}
+
 .card,
 .cvv,
-.expiry {
+.expiry,
+.user-first-name,
+.user-last-name {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -134,4 +146,14 @@
   font-size: x-small;
   cursor: pointer;
   border: none;
+}
+.expiry-cvv-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.expiry,
+.cvv {
+  flex: 1;
 }
