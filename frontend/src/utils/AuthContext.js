@@ -3,9 +3,18 @@ import React, { createContext, useState, useContext } from "react";
 // Create Auth Context
 const AuthContext = createContext();
 
+const getUser = () => {
+  const savedUser = localStorage.getItem("user");
+
+  if (savedUser) {
+    return JSON.parse(savedUser);
+  } else {
+    return null;
+  }
+};
 // Auth Provider Component
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(getUser);
 
   // Log in function
   const login = (userData) => {
@@ -22,6 +31,7 @@ export const AuthProvider = ({ children }) => {
   // Initialize user from localStorage on app load
   React.useEffect(() => {
     const savedUser = localStorage.getItem("user");
+
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }

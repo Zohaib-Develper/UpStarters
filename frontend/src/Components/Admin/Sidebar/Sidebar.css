@@ -1,0 +1,68 @@
+.sidebar {
+  width: 60px;
+  background-color: #fff;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5% 0;
+}
+
+.icon {
+  color: rgb(206, 199, 199);
+  cursor: pointer;
+  width: 100%;
+}
+
+.icon.active {
+  color: #3f57c2;
+}
+
+.sidebar-footer {
+  margin-bottom: 20px;
+}
+
+.sidebar-menu .icon,
+.sidebar-footer .icon {
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.sidebar-menu .icon.active,
+.sidebar-footer .icon.active {
+  color: #3498db;
+  transform: scale(1.2);
+}
+
+.sidebar-footer {
+  position: relative;
+}
+
+.logout-button {
+  background-color: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 7px;
+  font-size: 14px;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
+}
+
+.sidebar-footer .icon:hover ~ .logout-button,
+.logout-button:hover {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}

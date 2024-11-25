@@ -1,0 +1,22 @@
+.stats-card {
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stats-content h5 {
+  font-size: 16px;
+}
+
+.stats-content h3 {
+  font-size: 24px;
+}
+
+.stats-icon {
+  font-size: 36px;
+  opacity: 0.6;
+}

@@ -26,8 +26,6 @@ const Login = () => {
       return;
     }
 
-    console.log("Email:", email);
-    console.log("Password:", password);
     const mockUser = { email, token: "123456" };
     login(mockUser); // Save user state
     alert("Login successful!");
