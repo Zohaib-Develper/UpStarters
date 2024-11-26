@@ -5,8 +5,6 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import Navbar from "./Components/Navbar/Navbar";
-import Footer from "./Components/Footer/Footer";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import { AuthProvider } from "./utils/AuthContext";
@@ -21,23 +19,50 @@ import ProjectsPage from "./pages/Admin/ProjectsPage";
 import CreateProject from "./Components/CreateProject/CreateProject";
 import ViewProjects from "./Components/ViewProjects/ViewProjects";
 import ViewInvestments from "./Components/ViewInvestments/ViewInvestments";
-import Settings from "./Components/Settings/Settings"
+import Settings from "./Components/Settings/Settings";
+import VerifyOtpPage from "./pages/VerifyOtpPage";
+import Navbar from "./Components/Navbar/Navbar";
+import Footer from "./Components/Footer/Footer";
 const App = () => {
   return (
     <AuthProvider>
       <Router>
-        {/* <Navbar /> */}
         <Routes>
           {/* Public routes */}
 
-          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/"
+            element={
+              <>
+                <Navbar />
+                <HomePage />
+                <Footer />
+              </>
+            }
+          />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/project/:id" element={<ProjectDetailsPage />} />
-          <Route path="/create-project" element={<CreateProject />} />
-          <Route path="/view-projects" element={<ViewProjects />} />
-          <Route path="/view-investments" element={<ViewInvestments />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route path="/verify/:email" element={<VerifyOtpPage />} />
+          <Route
+            path="/projects/:id"
+            element={<ProtectedRoute element={<ProjectDetailsPage />} />}
+          />
+          <Route
+            path="/projects/add"
+            element={<ProtectedRoute element={<CreateProject />} />}
+          />
+          <Route
+            path="/projects"
+            element={<ProtectedRoute element={<ViewProjects />} />}
+          />
+          <Route
+            path="/investments"
+            element={<ProtectedRoute element={<ViewInvestments />} />}
+          />
+          <Route
+            path="/settings"
+            element={<ProtectedRoute element={<Settings />} />}
+          />
           {/* Protected routes */}
           {/* Admin routes */}
           <Route path="/admin/login" element={<AdminLoginPage />} />
@@ -58,7 +83,6 @@ const App = () => {
           {/* Catch-all route for unmatched paths */}
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
-        {/* <Footer /> */}
       </Router>
     </AuthProvider>
   );

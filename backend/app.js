@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 // app.get('/api/project/all',authControler.Protect, authControler.RestrictTo('admin'), projectControler.All_Active_Projects)
 app.use("/api/project", projectHandler);
 app.use("/api/auth", userHandler);
-app.use("/api/me", userHandler);
+app.use("/api", userHandler);
 app.use("/api/invest", investmentHandler);
 app.use("/api/investor", investorHandler);
 

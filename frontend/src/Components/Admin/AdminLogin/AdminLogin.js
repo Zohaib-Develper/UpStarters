@@ -16,7 +16,7 @@ const AdminLogin = () => {
     e.preventDefault();
     axios
       .post(
-        "http://localhost:80/api/me/login", // Backend API URL
+        "http://localhost:80/api/login", // Backend API URL
         { username, password }, // Request body
         { withCredentials: true } // Axios config for credentials
       )

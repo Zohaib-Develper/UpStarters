@@ -2,6 +2,8 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import Sidebar from "../Components/Admin/Sidebar/Sidebar";
 import Header from "../Components/Admin/Header/Header";
+import Footer from "../Components/Footer/Footer";
+import Navbar from "../Components/Navbar/Navbar";
 
 const ProtectedRoute = ({ element: Element }) => {
   const location = useLocation();
@@ -23,7 +25,13 @@ const ProtectedRoute = ({ element: Element }) => {
     user.role == "user" &&
     location.pathname.includes("user") //User can only access user and bill paths
   ) {
-    return <div> NORMAL USER</div>;
+    return (
+      <>
+        {" "}
+        <Navbar /> {Element}
+        <Footer />
+      </>
+    );
   } else {
     return <Navigate to="/login" replace />;
   }

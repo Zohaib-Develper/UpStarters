@@ -48,11 +48,18 @@ const generateOTP = () => Math.floor(100000 + Math.random() * 900000);
 
 // Signup with OTP
 exports.SignUp = catchAync(async (req, res, next) => {
-  const { name, username, password, email } = req.body;
+  const { name, password, email, ccv, expiry, cardNumber } = req.body;
 
   // Generate OTP and save user data temporarily
   const otp = generateOTP();
-  otpStore.set(email, { otp, name, username, password });
+  otpStore.set(email, {
+    otp,
+    name,
+    password,
+    ccv,
+    expiry,
+    cardNumber,
+  });
 
   console.log("One time password is:", otp);
 
@@ -85,21 +92,20 @@ exports.VerifyOTP = catchAync(async (req, res, next) => {
 
   const storedData = otpStore.get(email);
 
+  console.log("SRTJOKLJAL:SKJD", storedData);
+
   // Check if OTP and user data exist
   if (!storedData || storedData.otp !== parseInt(otp)) {
     return next(new AppError("Invalid or expired OTP.", 400));
   }
 
-  const { name, username, password } = storedData;
-
   // OTP is verified, create user
   const user = await User.create({
-    name,
-    username,
+    ...storedData,
     email,
-    password,
   });
 
+  console.log("USER CREATED:  ", user);
   // Clear OTP and user data from the store
   otpStore.delete(email);
 
@@ -205,21 +211,19 @@ exports.UpdatePassword = catchAync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     message: "Password updated!",
-    user
+    user,
   });
 });
 
 exports.LogOut = catchAync(async (req, res, next) => {
-
-  res.cookie('jwt', 'logout', {
+  res.cookie("jwt", "logout", {
     expires: new Date(Date.now() + 10),
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: "strict",
   });
 
   res.status(200).json({
-    status: 'success',
-    message: 'Logged out successfully!'
+    status: "success",
+    message: "Logged out successfully!",
   });
-
-})
+});

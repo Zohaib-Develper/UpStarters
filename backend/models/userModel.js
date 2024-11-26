@@ -8,8 +8,6 @@ const userScheme = new mongoose.Schema({
   },
   username: {
     type: String,
-    required: true,
-    unique: [true, "Username already exists"],
   },
   password: {
     type: String,
@@ -27,6 +25,9 @@ const userScheme = new mongoose.Schema({
     type: String,
     required: [true, "Please enter email address."],
   },
+  cvv: String,
+  expiry: String,
+  cardNumber: String,
   PasswordChangedAt: Date,
 });
 
