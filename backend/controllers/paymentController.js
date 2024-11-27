@@ -30,4 +30,4 @@ exports.HandlePayments = catchAsync(async (req, res, next) => {
 
     next()
 
-})
+});
