@@ -2,6 +2,7 @@ const Investment = require('./../models/investmentModel')
 const Project = require('./../models/projectModel');
 const AppError = require('./../utils/appError')
 const catchAync = require('./../utils/catchAsync')
+const handlePayment = require('./paymentController')
 
 exports.InvestInProject = catchAync(async (req, res, next) => {
 
@@ -16,10 +17,15 @@ exports.InvestInProject = catchAync(async (req, res, next) => {
     if (req.body.amount < 0) 
         return next(new AppError('Please enter valid amount!', 400))
 
+
+    // Stripe ka kaam in the following controller
+    const res = await handlePayment.HandlePayments(req, res, next)
+
     if (project.fundsRaised >= project.investmentGoal) {
         await Project.findByIdAndUpdate(project._id, { fundsRaised: project.investmentGoal });
         return next(new AppError('Investment goal already reached. No further funds are required!', 400));
     }    
+
 
     await Project.findByIdAndUpdate(
         project._id,

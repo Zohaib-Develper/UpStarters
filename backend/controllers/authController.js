@@ -48,7 +48,16 @@ const generateOTP = () => Math.floor(100000 + Math.random() * 900000);
 
 // Signup with OTP
 exports.SignUp = catchAync(async (req, res, next) => {
-  const { name, password, email, ccv, expiry, cardNumber } = req.body;
+  const { name, username, password, email, ccv, expiry, cardNumber } = req.body;
+
+  const IsExists = await User.findOne({ username })
+
+  if (IsExists) {
+    return res.status(400).json({
+      status: "fail",
+      message: "User already exists!"
+    })
+  }
 
   // Generate OTP and save user data temporarily
   const otp = generateOTP();
