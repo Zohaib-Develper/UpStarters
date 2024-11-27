@@ -7,7 +7,7 @@ import axios from "axios";
 const AdminLogin = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -17,12 +17,12 @@ const AdminLogin = () => {
     axios
       .post(
         "http://localhost:80/api/login", // Backend API URL
-        { username, password }, // Request body
+        { email, password }, // Request body
         { withCredentials: true } // Axios config for credentials
       )
       .then(() => {
         setSuccessMessage("Login successful!"); // Set success message
-        login({ username: username, role: "admin" });
+        login({ email: email, role: "admin" });
         navigate("/admin/dashboard"); // Use a relative path for navigation
       })
       .catch((error) => {
@@ -46,16 +46,16 @@ const AdminLogin = () => {
         )}
         <form onSubmit={handleLogin}>
           <div className="mb-3">
-            <label htmlFor="username" className="form-label text-green">
-              Username
+            <label htmlFor="email" className="form-label text-green">
+              Email
             </label>
             <input
-              type="text"
+              type="email"
               className="form-control"
-              id="username"
-              placeholder="Enter your username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              id="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>

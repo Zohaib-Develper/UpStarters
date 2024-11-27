@@ -26,8 +26,7 @@ const CreateSendToken = (user, statusCode, res) => {
 
   res.status(statusCode).json({
     status: "success",
-    token,
-    user,
+    name: user.name,
   });
 };
 
@@ -50,13 +49,13 @@ const generateOTP = () => Math.floor(100000 + Math.random() * 900000);
 exports.SignUp = catchAync(async (req, res, next) => {
   const { name, username, password, email, ccv, expiry, cardNumber } = req.body;
 
-  const IsExists = await User.findOne({ username })
+  const IsExists = await User.findOne({ username });
 
   if (IsExists) {
     return res.status(400).json({
       status: "fail",
-      message: "User already exists!"
-    })
+      message: "User already exists!",
+    });
   }
 
   // Generate OTP and save user data temporarily
@@ -122,8 +121,8 @@ exports.VerifyOTP = catchAync(async (req, res, next) => {
 });
 
 exports.LogIn = catchAync(async (req, res, next) => {
-  const { username, password } = req.body;
-  const user = await User.findOne({ username: username }).select("+password");
+  const { email, password } = req.body;
+  const user = await User.findOne({ email }).select("+password");
 
   if (!user) {
     return next(new AppError("User does not exists!😂", 400));

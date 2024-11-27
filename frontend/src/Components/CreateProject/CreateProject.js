@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import "./CreateProject.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const CreateProject = () => {
   const [formData, setFormData] = useState({
@@ -8,8 +10,9 @@ const CreateProject = () => {
     fundingGoal: "",
     category: "",
   });
-
-  const [previewImages, setPreviewImages] = useState([]);
+  const navigate = useNavigate();
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
 
   // Handle input changes
   const handleInputChange = (e) => {
@@ -19,15 +22,43 @@ const CreateProject = () => {
 
   // Handle image upload and preview
   const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    const previews = files.map((file) => URL.createObjectURL(file));
-    setPreviewImages(previews);
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      setPreviewImage(URL.createObjectURL(file));
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Logic to submit the form data to the backend
-    console.log("Form Data Submitted: ", formData);
+
+    // Create FormData
+    const formDataToSend = new FormData();
+    formDataToSend.append("title", formData.title);
+    formDataToSend.append("description", formData.description);
+    formDataToSend.append("fundingGoal", formData.fundingGoal);
+    formDataToSend.append("category", formData.category);
+
+    // Add Image File
+    if (selectedImage) {
+      formDataToSend.append("image", selectedImage);
+    }
+
+    try {
+      // Send Data to Backend
+      const response = await axios.post(
+        "http://localhost:80/api/projects",
+        formDataToSend,
+        {
+          withCredentials: true,
+        }
+      );
+
+      console.log("Project created successfully:", response.data);
+      navigate("/"); // Navigate to home or another page
+    } catch (error) {
+      console.error("Error creating project:", error.response || error);
+    }
   };
 
   return (
@@ -105,29 +136,28 @@ const CreateProject = () => {
 
         {/* Image Upload */}
         <div className="mb-3">
-          <label htmlFor="images" className="form-label">
-            Upload Images*
+          <label htmlFor="image" className="form-label">
+            Upload Image*
           </label>
           <input
             type="file"
-            id="images"
+            id="image"
             className="form-control"
             accept="image/*"
-            multiple
             onChange={handleImageUpload}
+            required
           />
         </div>
 
         {/* Image Preview */}
         <div className="image-preview mb-3">
-          {previewImages.map((image, index) => (
+          {previewImage && (
             <img
-              key={index}
-              src={image}
-              alt={`Preview ${index}`}
+              src={previewImage}
+              alt="Preview"
               className="preview-thumbnail"
             />
-          ))}
+          )}
         </div>
 
         {/* Submit Button */}

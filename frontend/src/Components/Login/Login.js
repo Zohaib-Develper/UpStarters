@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import "./Login.css";
 import { useAuth } from "../../utils/AuthContext";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,10 +28,19 @@ const Login = () => {
       alert("Please fill in both email and password fields.");
       return;
     }
-
-    const mockUser = { email, token: "123456" };
-    login(mockUser); // Save user state
-    alert("Login successful!");
+    axios
+      .post(
+        "http://localhost:80/api/login",
+        { email, password },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        login({ name: res.data.name, role: "user" });
+        navigate("/");
+      })
+      .catch(() => {
+        alert("Incorrect Username or password");
+      });
   };
 
   return (

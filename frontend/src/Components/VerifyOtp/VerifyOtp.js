@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useAuth } from "../../utils/AuthContext";
 
 const VerifyOtp = () => {
   const { email } = useParams(); // Get the email from the URL
   const navigate = useNavigate(); // For navigation after OTP verification
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,6 +35,7 @@ const VerifyOtp = () => {
 
       if (response.status === 200) {
         alert("OTP Verified Successfully!");
+        login({ name: response.data.name, role: "user" });
         navigate("/"); // Redirect to home page on successful OTP verification
       } else {
         setError("Invalid OTP. Please try again.");

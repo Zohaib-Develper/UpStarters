@@ -9,20 +9,20 @@ const SidePanel = ({ isOpen, closePanel, user }) => {
   // Navigation handlers
   const handleCreateProject = () => {
     closePanel();
-    navigate("/create-project");
-  }
+    navigate("/projects/new");
+  };
   const handleViewProjects = () => {
     closePanel();
     navigate("/view-projects");
-  }
+  };
   const handleViewInvestments = () => {
     closePanel();
-    navigate("/view-investments")
+    navigate("/view-investments");
   };
   const handleSettings = () => {
     closePanel();
     navigate("/settings");
-  }
+  };
   return (
     <div className={`side-panel ${isOpen ? "open" : ""}`}>
       {/* Profile Section */}

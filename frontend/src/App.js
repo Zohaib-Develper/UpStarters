@@ -15,7 +15,6 @@ import DashboardPage from "./pages/Admin/DashboardPage";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import UsersPage from "./pages/Admin/UsersPage";
 import ProjectsPage from "./pages/Admin/ProjectsPage";
-//import ProtectedRoute from "./utils/ProtectedRoute";
 import CreateProject from "./Components/CreateProject/CreateProject";
 import ViewProjects from "./Components/ViewProjects/ViewProjects";
 import ViewInvestments from "./Components/ViewInvestments/ViewInvestments";
@@ -48,7 +47,7 @@ const App = () => {
             element={<ProtectedRoute element={<ProjectDetailsPage />} />}
           />
           <Route
-            path="/projects/add"
+            path="/projects/new"
             element={<ProtectedRoute element={<CreateProject />} />}
           />
           <Route

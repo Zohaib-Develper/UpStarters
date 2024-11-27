@@ -4,7 +4,9 @@ const projectHandler = require("./routers/projectRouter");
 const userHandler = require("./routers/userRouter");
 const investmentHandler = require("./routers/investmentRouter");
 const investorHandler = require("./routers/investorRouter");
-const paymentHandler = require("./routers/paymentRouter")
+const paymentHandler = require("./routers/paymentRouter");
+const cookieParser = require("cookie-parser");
+
 const cors = require("cors");
 
 // Configure CORS options
@@ -16,6 +18,7 @@ const corsOptions = {
 
 // Use the CORS middleware with the options
 app.use(cors(corsOptions));
+app.use(cookieParser());
 const errorController = require("./controllers/errorController");
 
 app.use(express.json());
@@ -26,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 // })
 
 // app.get('/api/project/all',authControler.Protect, authControler.RestrictTo('admin'), projectControler.All_Active_Projects)
-app.use("/api/project", projectHandler);
+app.use("/api/projects", projectHandler);
 app.use("/api/auth", userHandler);
 app.use("/api", userHandler);
 app.use("/api/invest", investmentHandler);

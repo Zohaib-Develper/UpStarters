@@ -21,10 +21,7 @@ const ProtectedRoute = ({ element: Element }) => {
         </div>
       </div>
     );
-  } else if (
-    user.role == "user" &&
-    location.pathname.includes("user") //User can only access user and bill paths
-  ) {
+  } else if (user.role == "user") {
     return (
       <>
         {" "}
