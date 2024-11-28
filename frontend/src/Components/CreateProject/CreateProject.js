@@ -64,7 +64,11 @@ const CreateProject = () => {
   return (
     <div className="create-project-container">
       <h3 className="text-center mb-4">Create Project</h3>
-      <form onSubmit={handleSubmit} className="container">
+      <form
+        onSubmit={handleSubmit}
+        className="container"
+        enctype="multipart/form-data"
+      >
         {/* Project Title */}
         <div className="mb-3">
           <label htmlFor="title" className="form-label">

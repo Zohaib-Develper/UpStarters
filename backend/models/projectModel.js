@@ -11,7 +11,6 @@ const projectSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    minlength: [50, "Descripton length must be graetor than 50"],
   },
   category: {
     type: String,
@@ -52,7 +51,7 @@ const projectSchema = new mongoose.Schema({
     type: String,
     enum: ["pending", "approved", "rejected", "active"],
     // required: true
-    default: "pending",
+    default: "active",
   },
   createdAt: {
     type: Date,

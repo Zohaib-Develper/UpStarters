@@ -34,6 +34,7 @@ app.use("/api/auth", userHandler);
 app.use("/api", userHandler);
 app.use("/api/invest", investmentHandler);
 app.use("/api/investor", investorHandler);
+app.use("/api/payment", paymentHandler);
 
 app.use(errorController);
 

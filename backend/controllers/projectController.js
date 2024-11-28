@@ -5,7 +5,6 @@ const { uploadOnCloudinary } = require("./../utils/cloudinary");
 const fs = require("fs"); // To delete local files
 
 exports.AddProject = catchAync(async (req, res, next) => {
-  console.log("Inside ADDDDDDDDDDDDDDDDDDDD:LKS");
   if (!req.file) {
     return next(new AppError("Please upload an image!", 400));
   }
@@ -19,7 +18,6 @@ exports.AddProject = catchAync(async (req, res, next) => {
       new AppError("Cloudinary upload failed. Image URL is missing.", 500)
     );
 
-  console.log("Body is:", req.body);
   // Create the project with the Cloudinary URL
   const newProj = await Project.create({
     title: req.body.title,
@@ -30,10 +28,8 @@ exports.AddProject = catchAync(async (req, res, next) => {
     image: url, // Save the Cloudinary URL in the database
   });
 
-  console.log("Project Created: ", newProj);
   res.status(200).json({
     status: "Success",
-    data: newProj,
   });
 });
 
@@ -48,22 +44,32 @@ exports.All_Active_Projects = catchAync(async (req, res, next) => {
 });
 
 exports.All_Projects = catchAync(async (req, res, next) => {
-  const projects = await Project.find();
-
+  let projects = await Project.find().populate("creator");
+  for (let i = 0; i < projects.length; i++) {
+    projects[i].creator = {
+      name: projects[i].creator.name,
+      id: projects[i].id,
+    };
+  }
   res.status(200).json({
     status: "success",
     length: projects.length,
-    data: { projects },
+    data: projects,
   });
 });
 
 exports.GetProjectByID = catchAync(async (req, res, next) => {
-  const project = await Project.findById({ _id: req.params.id });
-
+  const project = await Project.findById({ _id: req.params.id }).populate(
+    "creator"
+  );
+  console.log(project);
+  project.creator = {
+    name: project.creator.name,
+    id: project.id,
+  };
   if (!project) return next(new AppError("Project not found!", 400));
-
-  if (project.status !== "active")
-    return next(new AppError("Cannot see this project! Come back lator!"));
+  // if (project.status !== "active")
+  //   return next(new AppError("Cannot see this project! Come back lator!"));
 
   res.status(200).json({
     status: "Success",

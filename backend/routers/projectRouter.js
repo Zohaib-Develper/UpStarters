@@ -10,27 +10,14 @@ router
   .get(projectController.All_Active_Projects)
   .post(
     authController.Protect,
-    (req, res, next) => {
-      upload.single("image")(req, res, (err) => {
-        if (err) {
-          console.log(err);
-          // Handle Multer error
-          return res.status(400).json({ error: err.message });
-        }
-        next(); // Proceed to the next middleware
-      });
-    },
+    upload.single("image"),
     projectController.AddProject
   );
 
 router.route("/add").post();
 router
   .route("/all")
-  .get(
-    authController.Protect,
-    authController.RestrictTo("admin"),
-    projectController.All_Projects
-  );
+  .get(authController.Protect, projectController.All_Projects);
 router
   .route("/:id")
   .get(projectController.GetProjectByID)

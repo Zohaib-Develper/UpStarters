@@ -6,9 +6,9 @@ const Footer = () => {
   if (pathname.includes("signup") || pathname.includes("login")) return "";
 
   return (
-    <footer class="footer-container">
-      <div class="footer-top">
-        <nav class="footer-nav">
+    <footer className="footer-container">
+      <div className="footer-top">
+        <nav className="footer-nav">
           <ul>
             <li>
               <a href="#">Arts</a>
@@ -37,8 +37,8 @@ const Footer = () => {
           </ul>
         </nav>
       </div>
-      <div class="footer-middle">
-        <div class="footer-column">
+      <div className="footer-middle">
+        <div className="footer-column">
           <h4>About</h4>
           <ul>
             <li>
@@ -58,7 +58,7 @@ const Footer = () => {
             </li>
           </ul>
         </div>
-        <div class="footer-column">
+        <div className="footer-column">
           <h4>Support</h4>
           <ul>
             <li>
@@ -78,25 +78,25 @@ const Footer = () => {
             </li>
           </ul>
         </div>
-        <div class="footer-logo">
+        <div className="footer-logo">
           <p>© Upstarter, 2024</p>
-          <div class="social-icons">
+          <div className="social-icons">
             <a href="#">
-              <i class="fab fa-facebook"></i>
+              <i className="fab fa-facebook"></i>
             </a>
             <a href="#">
-              <i class="fab fa-instagram"></i>
+              <i className="fab fa-instagram"></i>
             </a>
             <a href="#">
-              <i class="fab fa-twitter"></i>
+              <i className="fab fa-twitter"></i>
             </a>
             <a href="#">
-              <i class="fab fa-youtube"></i>
+              <i className="fab fa-youtube"></i>
             </a>
           </div>
         </div>
       </div>
-      <div class="footer-bottom">
+      <div className="footer-bottom">
         <ul>
           <li>
             <a href="#">Trust & Safety</a>
