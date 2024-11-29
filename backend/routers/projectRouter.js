@@ -25,6 +25,10 @@ router
   .delete(authController.Protect, projectController.DeleteProject);
 
 router
+  .route("/relatedProjects/:id")
+  .get(authController.Protect, projectController.Get_Related_Projects);
+
+router
   .route("/:id/approve")
   .get(
     authController.Protect,

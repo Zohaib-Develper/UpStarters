@@ -1,50 +1,61 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./ProjectDetails.css";
 import axios from "axios";
 import StripeCheckOut from "react-stripe-checkout";
-
-async function makePayment(token, project) {
-  project.price = 1000;
-  const body = {
-    token,
-    project,
-  };
-
-  const headers = {
-    "Content-Type": "application/json",
-  };
-  try {
-    const response = await fetch(`http://localhost:80/api/payment`, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(body),
-    });
-
-    const result = await response.json();
-    if (response.ok) {
-      alert("Payment successful!");
-    } else {
-      alert("Payment failed: " + result.message);
-    }
-  } catch (error) {
-    console.error("Payment Error:", error);
-    alert("Something went wrong!");
-  }
-}
+import ProjectCard from "../ProjectCard/ProjectCard";
 
 export default function ProjectDetails() {
   const { id } = useParams();
-  const [project, setProject] = useState({});
+  const [project, setProject] = useState(null);
+  const [relatedProjects, setRelatedProjects] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:80/api/projects/${id}`, {
-        withCredentials: true,
-      })
-      .then((res) => setProject(res.data.data))
-      .catch((err) => console.log("Error: ", err));
+    const fetchProjectDetails = async () => {
+      try {
+        let response = await axios.get(
+          `http://localhost:80/api/projects/${id}`,
+          { withCredentials: true }
+        );
+        setProject(response.data.data);
+
+        response = await axios.get(
+          `http://localhost:80/api/projects/relatedProjects/${id}`,
+          {
+            withCredentials: true,
+          }
+        );
+        console.log("REDLA: ", response.data.data);
+        setRelatedProjects(response.data.data);
+      } catch (error) {
+        console.error("Error fetching project details:", error);
+      }
+    };
+
+    fetchProjectDetails();
   }, [id]);
+
+  const makePayment = async (token, project) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:80/api/invest/${project._id}`,
+        {
+          token,
+          project: { ...project, price: 1000 },
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true, // Send cookies with the request
+        }
+      );
+      alert("Payment Successful");
+      navigate("/");
+    } catch (error) {
+      console.error("Payment Error:", error);
+      alert("Payment failed: " + error.response.data.message);
+    }
+  };
 
   if (!project) {
     return <div>Loading...</div>;
@@ -116,7 +127,20 @@ export default function ProjectDetails() {
         </div>
         <div className="related-projects mb-5">
           <h4 className="mt-5 ms-3">Related Projects</h4>
-          {/* {get all the projects of the same category only 3 projects not more than that} */}
+          <div className="project-list">
+            {relatedProjects.map((project) => (
+              <ProjectCard
+                key={project?._id}
+                id={project?._id} // Add this line
+                title={project.title}
+                creatorName={project.creator.name}
+                creatorId={project.creator.id}
+                description={project.description}
+                category={project.category}
+                imageUrl={project.image}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>

@@ -136,6 +136,7 @@ exports.LogIn = catchAync(async (req, res, next) => {
 });
 
 exports.Protect = catchAync(async (req, res, next) => {
+  console.log("Checking authentication");
   let token;
   if (
     req.headers.authorization &&
@@ -145,7 +146,6 @@ exports.Protect = catchAync(async (req, res, next) => {
   } else if (req.cookies && req.cookies.jwt) {
     token = req.cookies.jwt;
   }
-
   if (!token) {
     return next(
       new AppError("You are not logged in! Please log in to get access.", 401)
@@ -168,6 +168,7 @@ exports.Protect = catchAync(async (req, res, next) => {
 
   req.user = currentUser;
   // res.locals.user = currentUser;
+  console.log("Allowed");
   next();
 });
 

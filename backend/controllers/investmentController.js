@@ -6,16 +6,15 @@ const handlePayment = require("./paymentController");
 
 exports.InvestInProject = catchAync(async (req, res, next) => {
   const project = await Project.findById(req.params.id);
-
   if (!project) return next(new AppError("No Project found!", 404));
-
-  if (project.status !== "active")
-    return next(
-      new AppError(
-        "Cannot invest now in this project! Please come back later!",
-        400
-      )
-    );
+  console.log("inside invest", Object.keys(req.body), "Val: ", req.body);
+  // if (project.status !== "active")
+  //   return next(
+  //     new AppError(
+  //       "Cannot invest now in this project! Please come back later!",
+  //       400
+  //     )
+  //   );
 
   if (req.body.amount < 0)
     return next(new AppError("Please enter valid amount!", 400));
@@ -35,23 +34,30 @@ exports.InvestInProject = catchAync(async (req, res, next) => {
     );
   }
 
-  await Project.findByIdAndUpdate(project._id, {
-    $addToSet: { investors: req.user._id },
-    $inc: { fundsRaised: req.body.amount },
-  });
+  try {
+    console.log("Amound: ", req.body.project.price);
+    const re = await Project.findByIdAndUpdate(project._id, {
+      $push: { investors: req.user._id },
+      $inc: { fundsRaised: req.body.project.price },
+    });
+    console.log("Project", re);
+    console.log("Sending", await Investment.find());
+    const investment = await Investment.create({
+      project: project._id,
+      investor: req.user._id,
+      amount: req.body.project.price,
+      //  equityAcquired: req.body.equityAcquired,
+      // investmentDate: req.body.investmentDate,
+    });
 
-  const investment = await Investment.create({
-    project: project._id,
-    investor: req.user._id,
-    amount: req.body.amount,
-    equityAcquired: req.body.equityAcquired,
-    investmentDate: req.body.investmentDate,
-  });
-
-  res.status(201).json({
-    status: "success",
-    data: {
-      investment,
-    },
-  });
+    console.log("Sending", investment);
+    res.status(200).json({
+      status: "success",
+      data: {
+        investment,
+      },
+    });
+  } catch (err) {
+    console.log("Error: ", err);
+  }
 });

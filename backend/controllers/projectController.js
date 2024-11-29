@@ -62,7 +62,7 @@ exports.GetProjectByID = catchAync(async (req, res, next) => {
   const project = await Project.findById({ _id: req.params.id }).populate(
     "creator"
   );
-  console.log(project);
+
   project.creator = {
     name: project.creator.name,
     id: project.id,
@@ -137,8 +137,6 @@ exports.ProjectProgress = catchAync(async (req, res, next) => {
     return next(new AppError("Project not found!", 400));
   }
 
-  console.log(project.creator.toString());
-  console.log(req.user._id.toString());
   if (
     project.creator.toString() !== req.user._id.toString() &&
     req.user.role != "admin"
@@ -188,5 +186,20 @@ exports.DeleteProject = catchAync(async (req, res, next) => {
   res.status(200).json({
     status: "Success",
     message: "Project deleted!",
+  });
+});
+
+exports.Get_Related_Projects = catchAync(async (req, res, next) => {
+  let projects = await Project.find().populate("creator").limit(4);
+  for (let i = 0; i < projects.length; i++) {
+    projects[i].creator = {
+      name: projects[i].creator.name,
+      id: projects[i].id,
+    };
+  }
+  res.status(200).json({
+    status: "success",
+    length: projects.length,
+    data: projects,
   });
 });
