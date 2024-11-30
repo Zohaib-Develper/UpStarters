@@ -1,21 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import axios from "axios";
 
 const ProjectsTable = () => {
   // Sample project data
-  const [projects] = useState([
-    { id: 1, creator: "Alice", investments: 5000, date: "2023-11-01" },
-    { id: 2, creator: "Bob", investments: 3000, date: "2023-10-25" },
-    { id: 3, creator: "Charlie", investments: 8000, date: "2023-09-15" },
-    { id: 4, creator: "David", investments: 2000, date: "2023-11-10" },
-  ]);
+  const [projects, setProjects] = useState([]);
+  console.log("ROJECT: ", projects);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:80/api/admin/projects", {
+        withCredentials: true,
+      })
+      .then((res) => setProjects(res.data.projects));
+  }, []);
 
   // State for search input
   const [searchTerm, setSearchTerm] = useState("");
 
   // Filtered projects based on the search term
-  const filteredProjects = projects.filter((project) =>
-    project.creator.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredProjects = projects.filter(
+    (project) => true
+    // project?.creator?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Handler to view project details
@@ -27,6 +33,10 @@ const ProjectsTable = () => {
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this project?")) {
       alert(`Project with ID ${id} deleted.`);
+      axios.delete(`http://localhost:80/api/admin/projects/${id}`, {
+        withCredentials: true,
+      });
+      setProjects(projects.filter((project) => project._id != id));
     }
   };
 
@@ -52,6 +62,7 @@ const ProjectsTable = () => {
         <thead>
           <tr>
             <th>ID</th>
+            <th>Title</th>
             <th>Creator</th>
             <th>Total Investment Collected</th>
             <th>Date of Creation</th>
@@ -61,21 +72,16 @@ const ProjectsTable = () => {
         <tbody>
           {filteredProjects.length > 0 ? (
             filteredProjects.map((project) => (
-              <tr key={project.id}>
-                <td>{project.id}</td>
-                <td>{project.creator}</td>
-                <td>${project.investments.toLocaleString()}</td>
-                <td>{project.date}</td>
+              <tr key={project._id}>
+                <td>{project._id}</td>
+                <td>{project.title}</td>
+                <td>{project?.creator?.name}</td>
+                <td>${project?.fundsRaised?.toLocaleString()}</td>
+                <td>{new Date(project?.createdAt).toLocaleString()}</td>
                 <td>
                   <button
-                    className="btn btn-primary btn-sm me-2"
-                    onClick={() => handleView(project)}
-                  >
-                    View
-                  </button>
-                  <button
                     className="btn btn-danger btn-sm"
-                    onClick={() => handleDelete(project.id)}
+                    onClick={() => handleDelete(project._id)}
                   >
                     Delete
                   </button>

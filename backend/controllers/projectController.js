@@ -4,7 +4,7 @@ const AppError = require("./../utils/appError");
 const { uploadOnCloudinary } = require("./../utils/cloudinary");
 const fs = require("fs"); // To delete local files
 
-exports.AddProject = catchAync(async (req, res, next) => {
+exports.addProject = catchAync(async (req, res, next) => {
   if (!req.file) {
     return next(new AppError("Please upload an image!", 400));
   }
@@ -33,21 +33,11 @@ exports.AddProject = catchAync(async (req, res, next) => {
   });
 });
 
-// exports.All_Active_Projects = catchAync(async (req, res, next) => {
-//   const projects = await Project.find({ status: "active" });
-
-//   res.status(200).json({
-//     status: "success",
-//     length: projects.length,
-//     data: { projects },
-//   });
-// });
-
-exports.All_Projects = catchAync(async (req, res, next) => {
+exports.allProjects = catchAync(async (req, res, next) => {
   let projects = await Project.find().populate("creator");
   for (let i = 0; i < projects.length; i++) {
     projects[i].creator = {
-      name: projects[i].creator.name,
+      name: projects[i]?.creator?.name,
       id: projects[i].id,
     };
   }
@@ -58,7 +48,7 @@ exports.All_Projects = catchAync(async (req, res, next) => {
   });
 });
 
-exports.GetProjectByID = catchAync(async (req, res, next) => {
+exports.getProjectById = catchAync(async (req, res, next) => {
   const project = await Project.findById({ _id: req.params.id }).populate(
     "creator"
   );
@@ -77,39 +67,7 @@ exports.GetProjectByID = catchAync(async (req, res, next) => {
   });
 });
 
-exports.ApproveProject = catchAync(async (req, res, next) => {
-  const projectId = req.params.id;
-  const project = await Project.findByIdAndUpdate(
-    projectId,
-    { status: "active" },
-    { new: true }
-  );
-
-  if (!project) {
-    return next(new AppError("Project not found!", 404));
-  }
-
-  res.status(200).json({
-    status: "success",
-    data: project,
-  });
-});
-
-exports.RejectProject = catchAync(async (req, res, next) => {
-  const projectId = req.params.id;
-  await Project.findByIdAndDelete(
-    projectId,
-    { status: "rejected" },
-    { new: true }
-  );
-
-  res.status(200).json({
-    status: "success",
-    message: `project with id:${projectId} deleted!`,
-  });
-});
-
-exports.UpdateProject = catchAync(async (req, res, next) => {
+exports.updateProject = catchAync(async (req, res, next) => {
   const proj = await Project.findById(id);
   if (!proj) {
     return next(new AppError("Project not found!", 400));
@@ -130,55 +88,20 @@ exports.UpdateProject = catchAync(async (req, res, next) => {
   });
 });
 
-exports.ProjectProgress = catchAync(async (req, res, next) => {
-  const project = await Project.findById(req.params.id);
+exports.deleteProject = catchAync(async (req, res, next) => {
+  const user = req.user._id;
 
-  if (!project) {
-    return next(new AppError("Project not found!", 400));
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return next(new AppError("Invalid project ID!", 400));
   }
 
-  if (
-    project.creator.toString() !== req.user._id.toString() &&
-    req.user.role != "admin"
-  ) {
-    return next(new AppError("You do not have permission!", 400));
+  const proj = await Project.findById(req.params.id);
+  if (!proj) {
+    return next(new AppError("Project not found!", 404));
   }
 
-  const timeRemaining =
-    72 - (Date.now() - project.createdAt) / (1000 * 60 * 60);
-
-  res.status(200).json({
-    status: "success",
-    Project_Progress: {
-      Title: project.title,
-      "Investment Goal": project.investmentGoal,
-      "Funds Raised": project.fundsRaised,
-      "Percentage Raised": `${(
-        (project.fundsRaised / project.investmentGoal) *
-        100
-      ).toFixed(2)}%`,
-      "Time left": `${Math.max(timeRemaining, 0)} hours`,
-      "No. of investors": project.investors.length,
-    },
-  });
-});
-
-exports.DeleteProject = catchAync(async (req, res, next) => {
-  if (req.user.role !== "admin") {
-    const user = req.user._id;
-
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return next(new AppError("Invalid project ID!", 400));
-    }
-
-    const proj = await Project.findById(req.params.id);
-    if (!proj) {
-      return next(new AppError("Project not found!", 404));
-    }
-
-    if (proj.creator.toString() !== user.toString()) {
-      return next(new AppError("Not authorized to delete this project!", 403));
-    }
+  if (proj.creator.toString() !== user.toString()) {
+    return next(new AppError("Not authorized to delete this project!", 403));
   }
 
   await Project.findByIdAndDelete(req.params.id);
@@ -189,7 +112,7 @@ exports.DeleteProject = catchAync(async (req, res, next) => {
   });
 });
 
-exports.Get_Related_Projects = catchAync(async (req, res, next) => {
+exports.getRelatedProjects = catchAync(async (req, res, next) => {
   let projects = await Project.find().populate("creator").limit(4);
   for (let i = 0; i < projects.length; i++) {
     projects[i].creator = {
@@ -204,7 +127,7 @@ exports.Get_Related_Projects = catchAync(async (req, res, next) => {
   });
 });
 
-exports.GetProjectsOfUser = catchAync(async (req, res, next) => {
+exports.getProjectsOfUser = catchAync(async (req, res, next) => {
   console.log("GetProjectsOfUser request received");
 
   let projects = await Project.find({ creator: req.user._id });
@@ -217,7 +140,7 @@ exports.GetProjectsOfUser = catchAync(async (req, res, next) => {
   });
 });
 
-exports.GetProjectsByCategory = catchAync(async (req, res, next) => {
+exports.getProjectByCategory = catchAync(async (req, res, next) => {
   let projects = await Project.find({ category: req.params.category }).populate(
     "creator"
   );

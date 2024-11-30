@@ -29,17 +29,17 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/admin/login"); // Use a relative path for navigation
-    // axios
-    //   .post(
-    //     "http://localhost:80/api/me/logout", // Backend API URL
-    //     { withCredentials: true } // Axios config for credentials
-    //   )
-    //   .then(() => {
-    //     logout();
-    //     navigate("/admin/login"); // Use a relative path for navigation
-    //   })
-    //   .catch((error) => {});
+
+    axios
+      .post(
+        "http://localhost:80/api/admin/logout", // Backend API URL
+        {},
+        { withCredentials: true } // Axios config for credentials
+      )
+      .then(() => {
+        logout();
+        navigate("/admin/login"); // Use a relative path for navigation
+      });
   };
 
   return (

@@ -1,8 +1,21 @@
 import StatsCard from "../../Components/Admin/StatsCard/StatsCard";
 import Charts from "../../Components/Admin/Charts/Charts";
 import { FaUsers, FaBox } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const DashboardPage = () => {
+  const [stats, setStats] = useState({});
+  useEffect(() => {
+    axios
+      .get("http://localhost:80/api/admin/stats", { withCredentials: true })
+      .then((res) =>
+        setStats({
+          noOfProjects: res.data.noOfUsers,
+          noOfUsers: res.data.noOfProjects,
+        })
+      );
+  }, []);
   return (
     <>
       <h3 className="fw-bold ps-3">Dashboard</h3>
@@ -12,13 +25,13 @@ const DashboardPage = () => {
       >
         <StatsCard
           title="Total Users"
-          value="40,689"
+          value={stats.noOfUsers}
           icon={<FaUsers size={120} />}
           bgColor="#4bc0c0"
         />
         <StatsCard
           title="Total Projects"
-          value="10,293"
+          value={stats.noOfProjects}
           icon={<FaBox size={120} />}
           bgColor="#ffce56"
         />

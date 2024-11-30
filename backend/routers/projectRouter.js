@@ -5,53 +5,29 @@ const upload = require("./../utils/multer");
 
 const router = express.Router();
 
-router
-  .route("/category/:category")
-  .get(projectController.GetProjectsByCategory);
+router.route("/category/:category").get(projectController.getProjectByCategory);
 
 router
   .route("/userprojects")
-  .get(authController.Protect, projectController.GetProjectsOfUser);
+  .get(authController.Protect, projectController.getProjectsOfUser);
 
 router
   .route("/")
   .post(
     authController.Protect,
     upload.single("image"),
-    projectController.AddProject
+    projectController.addProject
   );
 
-router.route("/add").post();
-router
-  .route("/all")
-  .get(authController.Protect, projectController.All_Projects);
+router.route("/all").get(projectController.allProjects);
 router
   .route("/:id")
-  .get(projectController.GetProjectByID)
-  .patch(authController.Protect, projectController.UpdateProject)
-  .delete(authController.Protect, projectController.DeleteProject);
+  .get(projectController.getProjectById)
+  .patch(authController.Protect, projectController.updateProject)
+  .delete(authController.Protect, projectController.deleteProject);
 
 router
   .route("/relatedProjects/:id")
-  .get(authController.Protect, projectController.Get_Related_Projects);
-
-router
-  .route("/:id/approve")
-  .get(
-    authController.Protect,
-    authController.RestrictTo("admin"),
-    projectController.ApproveProject
-  );
-router
-  .route("/:id/reject")
-  .get(
-    authController.Protect,
-    authController.RestrictTo("admin"),
-    projectController.RejectProject
-  );
-
-router
-  .route("/:id/progress")
-  .get(authController.Protect, projectController.ProjectProgress);
+  .get(authController.Protect, projectController.getRelatedProjects);
 
 module.exports = router;

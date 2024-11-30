@@ -30,7 +30,7 @@ const Login = () => {
     }
     axios
       .post(
-        "http://localhost:80/api/login",
+        "http://localhost:80/api/users/login",
         { email, password },
         { withCredentials: true }
       )

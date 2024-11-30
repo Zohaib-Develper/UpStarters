@@ -30,14 +30,16 @@ const Settings = () => {
   const handleSave = (e) => {
     e.preventDefault();
     axios
-      .patch("http://localhost:80/api", profile, { withCredentials: true })
+      .patch("http://localhost:80/api/users", profile, {
+        withCredentials: true,
+      })
       .then(() => alert("Profile updated successfully!"))
       .catch(() => alert("Error updating profile! Please try again later."));
   };
 
   const handleUpdatePassword = () => {
     axios
-      .patch("http://localhost:80/api/updatePassword", passwordData, {
+      .patch("http://localhost:80/api/users/updatePassword", passwordData, {
         withCredentials: true,
       })
       .then(() => {

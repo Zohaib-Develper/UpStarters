@@ -1,29 +1,19 @@
-const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
-const userScheme = new mongoose.Schema({
-  name: {
+const adminSchema = new mongoose.Schema({
+  email: {
     type: String,
     required: true,
+    unique: true,
   },
   password: {
     type: String,
-    required: [true, "Please enter password"],
-    minlength: [8, "Password length must be graetor than 8"],
-    select: false,
+    required: true,
   },
-  email: {
-    type: String,
-    required: [true, "Please enter email address."],
-    unique: true,
-  },
-  cvv: String,
-  expiry: String,
-  cardNumber: String,
-  PasswordChangedAt: Date,
 });
 
-userScheme.pre("save", async function (next) {
+adminSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
   this.password = await bcrypt.hash(this.password, 12);
@@ -32,14 +22,14 @@ userScheme.pre("save", async function (next) {
   next();
 });
 
-userScheme.methods.CorrectPassword = async function (
+adminSchema.methods.CorrectPassword = async function (
   CandiatePassword,
   UserPassword
 ) {
   return await bcrypt.compare(CandiatePassword, UserPassword);
 };
 
-userScheme.methods.PasswordChangedAfter = function (JWTTimestamp) {
+adminSchema.methods.PasswordChangedAfter = function (JWTTimestamp) {
   if (this.PasswordChangedAt) {
     const changedTimestamp = parseInt(
       this.passwordChangedAt.getTime() / 1000,
@@ -54,7 +44,7 @@ userScheme.methods.PasswordChangedAfter = function (JWTTimestamp) {
   return false;
 };
 
-userScheme.set("toJSON", {
+adminSchema.set("toJSON", {
   transform: function (doc, ret) {
     delete ret.password;
     delete ret.__v;
@@ -62,6 +52,6 @@ userScheme.set("toJSON", {
   },
 });
 
-const User = mongoose.model("User", userScheme);
+const Admin = mongoose.model("Admin", adminSchema);
 
-module.exports = User;
+module.exports = Admin;

@@ -16,13 +16,14 @@ const AdminLogin = () => {
     e.preventDefault();
     axios
       .post(
-        "http://localhost:80/api/login", // Backend API URL
+        "http://localhost:80/api/admin/login", // Backend API URL
         { email, password }, // Request body
         { withCredentials: true } // Axios config for credentials
       )
-      .then(() => {
-        setSuccessMessage("Login successful!"); // Set success message
-        login({ email: email, role: "admin" });
+      .then((response) => {
+        setSuccessMessage("Login successful!"); // Set success message\
+        console.log("Response: ", response);
+        login({ name: response.data.name, email: email, role: "admin" });
         navigate("/admin/dashboard"); // Use a relative path for navigation
       })
       .catch((error) => {

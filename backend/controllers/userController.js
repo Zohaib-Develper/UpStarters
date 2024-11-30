@@ -4,7 +4,7 @@ const AppError = require("./../utils/appError");
 const Investments = require("../models/investmentModel");
 
 //User Related Operations
-exports.GetUserById = catchAync(async (req, res, next) => {
+exports.getUserById = catchAync(async (req, res, next) => {
   const user = await User.findById(req.params.id);
 
   if (!user) {
@@ -17,8 +17,8 @@ exports.GetUserById = catchAync(async (req, res, next) => {
   });
 });
 
-exports.GetMe = catchAync(async (req, res, next) => {
-  const user = await User.findById(req.user._id, { role: 0 });
+exports.getUser = catchAync(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
 
   if (!user) {
     return next(new AppError("User not found!", 400));
@@ -30,7 +30,7 @@ exports.GetMe = catchAync(async (req, res, next) => {
   });
 });
 
-exports.UpdateMe = catchAync(async (req, res, next) => {
+exports.updateUser = catchAync(async (req, res, next) => {
   if (req.body.password || req.body.confirmPassword) {
     return next(
       new AppError(
@@ -40,9 +40,6 @@ exports.UpdateMe = catchAync(async (req, res, next) => {
     );
   }
 
-  if (req.body.role) {
-    return next(new AppError("You can't update your role now!", 400));
-  }
   console.log("Updating");
   const user = await User.findByIdAndUpdate(req.user._id, req.body, {
     new: true,
@@ -54,7 +51,7 @@ exports.UpdateMe = catchAync(async (req, res, next) => {
   });
 });
 
-exports.DeleteMe = catchAync(async (req, res, next) => {
+exports.deleteUser = catchAync(async (req, res, next) => {
   await User.findByIdAndDelete(req.user._id);
   res.status(200).json({
     status: "success",
@@ -63,7 +60,7 @@ exports.DeleteMe = catchAync(async (req, res, next) => {
 });
 
 //Investment Related Operations
-exports.GetInvestmentdata = catchAync(async (req, res, next) => {
+exports.getInvestmentsData = catchAync(async (req, res, next) => {
   console.log("GetInvestmentdata Request Recieved");
   const investments = await Investments.find({
     investor: req.user._id,
@@ -73,28 +70,6 @@ exports.GetInvestmentdata = catchAync(async (req, res, next) => {
     status: "Success",
     data: {
       investments,
-    },
-  });
-});
-
-exports.AllInvestors = catchAync(async (req, res, next) => {
-  const investors = await Investments.find()
-    .populate("investor", "name email")
-    .populate("project", "title description")
-    .select("amount equityAcquired investmentDate");
-
-  if (!investors || investors.length === 0) {
-    return res.status(404).json({
-      status: "fail",
-      message: "No investors found",
-    });
-  }
-
-  res.status(200).json({
-    status: "success",
-    results: investors.length,
-    data: {
-      investors,
     },
   });
 });

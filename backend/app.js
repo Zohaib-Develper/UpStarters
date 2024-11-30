@@ -3,7 +3,7 @@ const app = express();
 const projectHandler = require("./routers/projectRouter");
 const userHandler = require("./routers/userRouter");
 const investmentHandler = require("./routers/investmentRouter");
-const paymentHandler = require("./routers/paymentRouter");
+const adminHandler = require("./routers/adminRouter");
 const cookieParser = require("cookie-parser");
 
 const cors = require("cors");
@@ -29,10 +29,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // app.get('/api/project/all',authControler.Protect, authControler.RestrictTo('admin'), projectControler.All_Active_Projects)
 app.use("/api/projects", projectHandler);
-app.use("/api/auth", userHandler);
-app.use("/api", userHandler);
+app.use("/api/users", userHandler);
 app.use("/api/invest", investmentHandler);
-app.use("/api/payment", paymentHandler);
+app.use("/api/admin", adminHandler);
 
 app.use(errorController);
 

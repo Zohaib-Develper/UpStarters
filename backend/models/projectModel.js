@@ -39,10 +39,6 @@ const projectSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  // equityOffered: {
-  //     type: Number,
-  //     required: true
-  // },
   fundsRaised: {
     type: Number,
     default: 0,

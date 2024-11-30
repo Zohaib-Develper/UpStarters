@@ -5,6 +5,7 @@ const nodemailer = require("nodemailer");
 const AppError = require("./../utils/appError");
 const catchAync = require("./../utils/catchAsync");
 const { promisify } = require("util");
+const Admin = require("../models/adminModel");
 
 const GetToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
@@ -49,14 +50,6 @@ const generateOTP = () => Math.floor(100000 + Math.random() * 900000);
 exports.SignUp = catchAync(async (req, res, next) => {
   const { name, password, email, ccv, expiry, cardNumber } = req.body;
   console.log("Signup reqeust received with data: ", req.body);
-  // const IsExists = await User.findOne({ username });
-
-  // if (IsExists) {
-  //   return res.status(400).json({
-  //     status: "fail",
-  //     message: "User already exists!",
-  //   });
-  // }
 
   // Generate OTP and save user data temporarily
   const otp = generateOTP();
@@ -166,25 +159,10 @@ exports.Protect = catchAync(async (req, res, next) => {
   }
 
   req.user = currentUser;
-  // res.locals.user = currentUser;
+
   console.log("Allowed");
   next();
 });
-
-exports.RestrictTo = (...roles) => {
-  // Store parameters in an array
-
-  // console.log('--')
-  return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      return next(
-        new AppError("You do not have permission to perform this action.", 403)
-      );
-    }
-
-    next();
-  };
-};
 
 exports.UpdatePassword = catchAync(async (req, res, next) => {
   console.log("Update Request Received");
@@ -197,7 +175,7 @@ exports.UpdatePassword = catchAync(async (req, res, next) => {
   if (!user) {
     return next(new AppError("User not found!", 404));
   }
-  console.log("Goind for update");
+  console.log("Going for update");
   const isCorrect = await bcrypt.compare(req.body.oldPassword, user.password);
 
   if (!isCorrect) {
@@ -217,6 +195,72 @@ exports.UpdatePassword = catchAync(async (req, res, next) => {
 });
 
 exports.LogOut = catchAync(async (req, res, next) => {
+  res.cookie("jwt", "logout", {
+    expires: new Date(Date.now() + 10),
+    httpOnly: true,
+    sameSite: "strict",
+  });
+
+  res.status(200).json({
+    status: "success",
+    message: "Logged out successfully!",
+  });
+});
+
+//For admin
+exports.restrictToAdmin = async (req, res, next) => {
+  console.log("Checking authentication for admin");
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  } else if (req.cookies && req.cookies.jwt) {
+    token = req.cookies.jwt;
+  }
+  if (!token) {
+    return next(
+      new AppError("You are not logged in! Please log in to get access.", 401)
+    );
+  }
+
+  // Verify token
+  const decoded = await promisify(jwt.verify)(
+    token,
+    process.env.JWT_SECRET_KEY
+  );
+
+  const admin = await Admin.findById(decoded.id);
+
+  if (!admin) {
+    return next(
+      new AppError("The user belonging to this token does not exist.", 401)
+    );
+  }
+
+  req.admin = admin;
+
+  console.log("Allowed");
+  next();
+};
+
+exports.AdminLogin = catchAync(async (req, res, next) => {
+  const { email, password } = req.body;
+  const admin = await Admin.findOne({ email }).select("+password");
+
+  if (!admin) {
+    return next(new AppError("User does not exists!😂", 400));
+  }
+
+  if (!(await admin.CorrectPassword(password, admin.password))) {
+    return next(new AppError("Wrong password.🤬", 400));
+  }
+
+  CreateSendToken(admin, 200, res);
+});
+
+exports.AdminLogout = catchAync(async (req, res, next) => {
   res.cookie("jwt", "logout", {
     expires: new Date(Date.now() + 10),
     httpOnly: true,

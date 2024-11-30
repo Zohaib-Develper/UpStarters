@@ -4,7 +4,7 @@ const AppError = require("./../utils/appError");
 const catchAync = require("./../utils/catchAsync");
 const handlePayment = require("./paymentController");
 
-exports.InvestInProject = catchAync(async (req, res, next) => {
+exports.invest = catchAync(async (req, res, next) => {
   const project = await Project.findById(req.params.id);
   if (!project) return next(new AppError("No Project found!", 404));
   console.log("inside invest", Object.keys(req.body), "Val: ", req.body);
