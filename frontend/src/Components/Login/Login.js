@@ -134,7 +134,7 @@ const Login = () => {
               <div className="sign-up-alternate">
                 <div className="register">
                   Don't have an account?
-                  <p>Register</p>
+                  <p onClick={() => navigate("/signup")}>Register</p>
                 </div>
               </div>
             </div>

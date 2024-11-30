@@ -1,25 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+
 const ViewInvestments = () => {
-  const investments = [
-    {
-      id: 1,
-      title: "Project A",
-      imageUrl: "https://example.com/project-a.jpg",
-      fundsRequired: 5000,
-      fundsCollected: 2500,
-      category: "Technology",
-      moneyInvested: 200,
-    },
-    {
-      id: 2,
-      title: "Project B",
-      imageUrl: "https://example.com/project-b.jpg",
-      fundsRequired: 10000,
-      fundsCollected: 7000,
-      category: "Art",
-      moneyInvested: 200,
-    },
-  ];
+  const [investments, setInvestments] = useState([]);
+
+  console.log(investments);
+  useEffect(() => {
+    axios
+      .get("http://localhost:80/api/users/investments", {
+        withCredentials: true,
+      })
+      .then((response) => setInvestments(response.data.data.investments))
+      .catch((err) => {
+        console.log("Error: ", err);
+      });
+  }, []);
   return (
     <div className="view-project-container">
       <h3 className="text-center my-4">View Investments</h3>
@@ -35,20 +30,24 @@ const ViewInvestments = () => {
           </tr>
         </thead>
         <tbody>
-          {investments.map((project) => (
-            <tr key={project.id}>
+          {investments.map((investment) => (
+            <tr key={investment.id}>
               <td>
                 <img
-                  src={project.imageUrl}
-                  alt={project.title}
+                  src={investment.project.image}
+                  alt={investment.title}
                   className="project-table-image"
                 />
               </td>
-              <td>{project.title}</td>
-              <td>{project.fundsRequired} Rs</td>
-              <td>{project.fundsCollected} Rs</td>
-              <td>{project.category}</td>
-              <td>{project.moneyInvested} Rs</td>
+              <td>{investment.project.title}</td>
+              <td>
+                {investment.project.investmentGoal -
+                  investment.project.fundsRaised}{" "}
+                Rs
+              </td>
+              <td>{investment.project.fundsRaised} Rs</td>
+              <td>{investment.project.category}</td>
+              <td>{investment.amount} Rs</td>
             </tr>
           ))}
         </tbody>

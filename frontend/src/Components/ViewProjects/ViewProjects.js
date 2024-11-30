@@ -1,26 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./ViewProjects.css";
+import axios from "axios";
+
 const ViewProjects = () => {
-  const projects = [
-    {
-      id: 1,
-      title: "Project A",
-      imageUrl: "https://example.com/project-a.jpg",
-      fundsRequired: 5000,
-      fundsCollected: 2500,
-      category: "Technology",
-      date:"12 Dec,2023",
-    },
-    {
-      id: 2,
-      title: "Project B",
-      imageUrl: "https://example.com/project-b.jpg",
-      fundsRequired: 10000,
-      fundsCollected: 7000,
-      category: "Art",
-      date:"12 Dec,2023",
-    },
-  ];
+  const [projects, setProjects] = useState([]);
+  useEffect(() => {
+    axios
+      .get("http://localhost:80/api/projects/userprojects", {
+        withCredentials: true,
+      })
+      .then((response) => {
+        setProjects(response.data.data);
+      })
+      .catch((err) => {
+        console.log("Error: ", err);
+      });
+  }, []);
   return (
     <div className="view-project-container">
       <h3 className="text-center my-4">View Projects</h3>
@@ -40,16 +35,16 @@ const ViewProjects = () => {
             <tr key={project.id}>
               <td>
                 <img
-                  src={project.imageUrl}
+                  src={project.image}
                   alt={project.title}
                   className="project-table-image"
                 />
               </td>
               <td>{project.title}</td>
-              <td>{project.fundsRequired} Rs</td>
-              <td>{project.fundsCollected} Rs</td>
+              <td>{project.investmentGoal} Rs</td>
+              <td>{project.fundsRaised} Rs</td>
               <td>{project.category}</td>
-              <td>{project.date}</td>
+              <td>{new Date(project.createdAt).toLocaleString()}</td>
             </tr>
           ))}
         </tbody>

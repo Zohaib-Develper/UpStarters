@@ -6,8 +6,15 @@ const upload = require("./../utils/multer");
 const router = express.Router();
 
 router
+  .route("/category/:category")
+  .get(projectController.GetProjectsByCategory);
+
+router
+  .route("/userprojects")
+  .get(authController.Protect, projectController.GetProjectsOfUser);
+
+router
   .route("/")
-  .get(projectController.All_Active_Projects)
   .post(
     authController.Protect,
     upload.single("image"),

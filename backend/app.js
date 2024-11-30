@@ -3,7 +3,6 @@ const app = express();
 const projectHandler = require("./routers/projectRouter");
 const userHandler = require("./routers/userRouter");
 const investmentHandler = require("./routers/investmentRouter");
-const investorHandler = require("./routers/investorRouter");
 const paymentHandler = require("./routers/paymentRouter");
 const cookieParser = require("cookie-parser");
 
@@ -33,7 +32,6 @@ app.use("/api/projects", projectHandler);
 app.use("/api/auth", userHandler);
 app.use("/api", userHandler);
 app.use("/api/invest", investmentHandler);
-app.use("/api/investor", investorHandler);
 app.use("/api/payment", paymentHandler);
 
 app.use(errorController);

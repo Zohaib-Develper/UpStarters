@@ -1,130 +1,220 @@
-import React, { useState } from "react";
-import "./Settings.css";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const Settings = () => {
-  const [profile, setProfile] = useState({
-    name: "Mamoon Ahmad",
-    email: "mamoon.ahmad@example.com",
-    cardNumber: "1234-5678-9012-3456",
-    cvv: "123",
-    expiry: "12/25",
+  const [profile, setProfile] = useState({});
+  const [passwordData, setPasswordData] = useState({
+    oldPassword: "",
+    newPassword: "",
   });
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
-  const [showPasswordInput, setShowPasswordInput] = useState(false);
+  useEffect(() => {
+    axios
+      .get("http://localhost:80/api/users", { withCredentials: true })
+      .then((response) => setProfile(response.data.data))
+      .catch((err) => console.error("Error: ", err));
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProfile({ ...profile, [name]: value });
   };
 
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordData({ ...passwordData, [name]: value });
+  };
+
   const handleSave = (e) => {
     e.preventDefault();
-    console.log("Profile saved:", profile);
-    alert("Profile updated successfully!");
+    axios
+      .patch("http://localhost:80/api", profile, { withCredentials: true })
+      .then(() => alert("Profile updated successfully!"))
+      .catch(() => alert("Error updating profile! Please try again later."));
+  };
+
+  const handleUpdatePassword = () => {
+    axios
+      .patch("http://localhost:80/api/updatePassword", passwordData, {
+        withCredentials: true,
+      })
+      .then(() => {
+        alert("Password updated successfully!");
+        setShowPasswordModal(false);
+        setPasswordData({ oldPassword: "", newPassword: "" });
+      })
+      .catch((err) => {
+        console.log("Error: ", err);
+        alert("Something Went wrong! Please try again later");
+      });
   };
 
   return (
-    <div className="settings-container">
-      <div className="settings-card">
-        <div className="settings-header">
-          <h4>Settings</h4>
-        </div>
-        <div className="settings-body">
-          <div className="settings-profile">
-            <div className="settings-image">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-              <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z" />
-            </svg>
-            </div>
-          </div>
+    <div className="container mt-5 d-flex justify-content-center">
+      <div className="card p-5 shadow-lg w-75">
+        <h2 className="text-center mb-4">Account Settings</h2>
 
-          <form onSubmit={handleSave}>
-            <div className="settings-form-group">
-              <label htmlFor="name">Name</label>
+        <form onSubmit={handleSave}>
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <label htmlFor="name" className="form-label">
+                Name
+              </label>
               <input
                 type="text"
                 id="name"
                 name="name"
-                className="settings-input"
-                value={profile.name}
+                className="form-control"
+                value={profile.name || ""}
                 onChange={handleChange}
+                placeholder="Enter your name"
               />
             </div>
-            <div className="settings-form-group">
-              <label htmlFor="email">Email</label>
+            <div className="col-md-6 mb-3">
+              <label htmlFor="email" className="form-label">
+                Email
+              </label>
               <input
                 type="email"
                 id="email"
                 name="email"
-                className="settings-input"
-                value={profile.email}
+                className="form-control"
+                value={profile.email || ""}
                 onChange={handleChange}
+                placeholder="Enter your email"
               />
             </div>
-            <div className="settings-form-group">
-              <label htmlFor="cardNumber">Card Number</label>
+          </div>
+
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <label htmlFor="cardNumber" className="form-label">
+                Card Number
+              </label>
               <input
                 type="text"
                 id="cardNumber"
                 name="cardNumber"
-                className="settings-input"
-                value={profile.cardNumber}
+                className="form-control"
+                value={profile.cardNumber || ""}
                 onChange={handleChange}
+                placeholder="Enter card number"
               />
             </div>
-            <div className="settings-row">
-              <div className="settings-form-group">
-                <label htmlFor="cvv">CVV</label>
-                <input
-                  type="text"
-                  id="cvv"
-                  name="cvv"
-                  className="settings-input"
-                  value={profile.cvv}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="settings-form-group">
-                <label htmlFor="expiry">Expiry Date</label>
-                <input
-                  type="text"
-                  id="expiry"
-                  name="expiry"
-                  className="settings-input"
-                  value={profile.expiry}
-                  onChange={handleChange}
-                />
-              </div>
+            <div className="col-md-3 mb-3">
+              <label htmlFor="cvv" className="form-label">
+                CVV
+              </label>
+              <input
+                type="text"
+                id="cvv"
+                name="cvv"
+                className="form-control"
+                value={profile.cvv || ""}
+                onChange={handleChange}
+                placeholder="CVV"
+              />
             </div>
+            <div className="col-md-3 mb-3">
+              <label htmlFor="expiry" className="form-label">
+                Expiry Date
+              </label>
+              <input
+                type="text"
+                id="expiry"
+                name="expiry"
+                className="form-control"
+                value={profile.expiry || ""}
+                onChange={handleChange}
+                placeholder="MM/YY"
+              />
+            </div>
+          </div>
 
-            {/* Change Password Section */}
-            <div className="settings-form-group">
-              <label>Change Password</label>
-              {!showPasswordInput ? (
-                <p
-                  className="settings-link"
-                  onClick={() => setShowPasswordInput(true)}>
-                  Click here to change your password
-                </p>
-              ) : (
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Enter new password"
-                  className="settings-input"
-                  onChange={handleChange}
-                />
-              )}
-            </div>
-
-            <div className="settings-button-container">
-              <button type="submit" className="settings-save-button">
-                Save Changes
-              </button>
-            </div>
-          </form>
-        </div>
+          <div className="mb-4">
+            <p
+              className="text-primary text-decoration-underline"
+              style={{ cursor: "pointer" }}
+              onClick={() => setShowPasswordModal(true)}
+            >
+              Change your password
+            </p>
+          </div>
+          <div className="d-flex justify-content-center">
+            {" "}
+            <button type="submit" className="btn btn-primary w-25">
+              Save Changes
+            </button>
+          </div>
+        </form>
       </div>
+
+      {/* Password Modal */}
+      {showPasswordModal && (
+        <div className="modal fade show d-block mt-5 " tabIndex="-1">
+          <div className="modal-dialog ">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Update Password</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowPasswordModal(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="mb-3">
+                  <label htmlFor="oldPassword" className="form-label">
+                    Old Password
+                  </label>
+                  <input
+                    type="password"
+                    id="oldPassword"
+                    name="oldPassword"
+                    className="form-control"
+                    value={passwordData.oldPassword}
+                    onChange={handlePasswordChange}
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="newPassword" className="form-label">
+                    New Password
+                  </label>
+                  <input
+                    type="password"
+                    id="newPassword"
+                    name="newPassword"
+                    className="form-control"
+                    value={passwordData.newPassword}
+                    onChange={handlePasswordChange}
+                    minLength="8"
+                    required
+                  />
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setShowPasswordModal(false)}
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleUpdatePassword}
+                >
+                  Update Password
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

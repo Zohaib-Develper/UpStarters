@@ -1,17 +1,39 @@
-const AuthController = require('./../controllers/authController')
-const UserController = require('./../controllers/userController')
-const express = require('express')
+const AuthController = require("./../controllers/authController");
+const UserController = require("./../controllers/userController");
+const express = require("express");
 
 const router = express.Router();
 
-router.route('/').get(AuthController.Protect, UserController.GetMe).patch(AuthController.Protect, UserController.UpdateMe).delete(AuthController.Protect, UserController.DeleteMe)
+//Investment Related Routes
+router
+  .route("/users/investments")
+  .get(AuthController.Protect, UserController.GetInvestmentdata);
 
-router.route('/signup').post(AuthController.SignUp)
-router.route('/verify-otp').post(AuthController.VerifyOTP)
-router.route('/login').post(AuthController.LogIn)
-router.route('/updatepassword').patch(AuthController.Protect, AuthController.UpdatePassword)
-router.route('/logout').get(AuthController.Protect, AuthController.LogOut)
-router.route('/:id').get(UserController.GetUserById)
+router
+  .route("/users")
+  .get(AuthController.Protect, UserController.GetMe)
+  .patch(AuthController.Protect, UserController.UpdateMe)
+  .delete(AuthController.Protect, UserController.DeleteMe);
 
+router.route("/users/signup").post(AuthController.SignUp);
+router.route("/users/verify-otp").post(AuthController.VerifyOTP);
+router.route("/login").post(AuthController.LogIn);
+router
+  .route("/users/updatepassword")
+  .patch(AuthController.Protect, AuthController.UpdatePassword);
+router
+  .route("/users/logout")
+  .get(AuthController.Protect, AuthController.LogOut);
+router.route("/users/:id").get(UserController.GetUserById);
 
-module.exports = router
+router
+  .route("/admin/investors")
+  .get(
+    AuthController.Protect,
+    AuthController.RestrictTo("admin"),
+    UserController.AllInvestors
+  );
+
+module.exports = router;
+
+module.exports = router;

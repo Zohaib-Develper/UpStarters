@@ -1,17 +1,18 @@
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const app = require('./app');
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const app = require("./app");
 
-dotenv.config({ path: './.env' });
+dotenv.config({ path: "./.env" });
 
 // const DB = process.env.DATABASE_NAME.replace('<PASSWORD>', process.env.DATABASE_BASE_PASSWORD);
 
-mongoose.connect("mongodb://localhost:27017/UpStarters")
+mongoose
+  .connect("mongodb://localhost:27017/UpStarters")
   .then(() => {
     console.log("DATABASE CONNECTED SUCCESSFULLY!");
   })
   .catch((err) => {
-    console.error('Connection error', err);
+    console.error("Connection error", err);
   });
 
 // Start the server

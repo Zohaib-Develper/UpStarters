@@ -6,11 +6,6 @@ const userScheme = new mongoose.Schema({
     type: String,
     required: true,
   },
-  username: {
-    type: String,
-    required: true,
-    unique: true
-  },
   password: {
     type: String,
     required: [true, "Please enter password"],
@@ -26,6 +21,7 @@ const userScheme = new mongoose.Schema({
   email: {
     type: String,
     required: [true, "Please enter email address."],
+    unique: true,
   },
   cvv: String,
   expiry: String,

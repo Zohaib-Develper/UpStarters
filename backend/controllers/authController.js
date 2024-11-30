@@ -47,16 +47,16 @@ const generateOTP = () => Math.floor(100000 + Math.random() * 900000);
 
 // Signup with OTP
 exports.SignUp = catchAync(async (req, res, next) => {
-  const { name, username, password, email, ccv, expiry, cardNumber } = req.body;
+  const { name, password, email, ccv, expiry, cardNumber } = req.body;
+  console.log("Signup reqeust received with data: ", req.body);
+  // const IsExists = await User.findOne({ username });
 
-  const IsExists = await User.findOne({ username });
-
-  if (IsExists) {
-    return res.status(400).json({
-      status: "fail",
-      message: "User already exists!",
-    });
-  }
+  // if (IsExists) {
+  //   return res.status(400).json({
+  //     status: "fail",
+  //     message: "User already exists!",
+  //   });
+  // }
 
   // Generate OTP and save user data temporarily
   const otp = generateOTP();
@@ -100,13 +100,12 @@ exports.VerifyOTP = catchAync(async (req, res, next) => {
 
   const storedData = otpStore.get(email);
 
-  console.log("SRTJOKLJAL:SKJD", storedData);
-
   // Check if OTP and user data exist
   if (!storedData || storedData.otp !== parseInt(otp)) {
     return next(new AppError("Invalid or expired OTP.", 400));
   }
 
+  console.log("Going to create user");
   // OTP is verified, create user
   const user = await User.create({
     ...storedData,
@@ -188,11 +187,8 @@ exports.RestrictTo = (...roles) => {
 };
 
 exports.UpdatePassword = catchAync(async (req, res, next) => {
-  if (
-    !req.body.oldpassword ||
-    !req.body.newpassword ||
-    !req.body.confirmnewpassword
-  ) {
+  console.log("Update Request Received");
+  if (!req.body.oldPassword || !req.body.newPassword) {
     return next(new AppError("Please enter all fields!", 400));
   }
 
@@ -201,22 +197,18 @@ exports.UpdatePassword = catchAync(async (req, res, next) => {
   if (!user) {
     return next(new AppError("User not found!", 404));
   }
-
-  const isCorrect = await bcrypt.compare(req.body.oldpassword, user.password);
+  console.log("Goind for update");
+  const isCorrect = await bcrypt.compare(req.body.oldPassword, user.password);
 
   if (!isCorrect) {
+    console.log("Password is incorrect");
     return next(new AppError("Old password is incorrect!", 401));
   }
 
-  if (req.body.newpassword !== req.body.confirmnewpassword) {
-    return next(new AppError("Passwords do not match!", 400));
-  }
-
-  user.password = req.body.newpassword;
-  user.confirmPassword = req.body.confirmnewpassword;
-
+  user.password = req.body.newPassword;
+  console.log("Saving User");
   await user.save({ validateBeforeSave: true }); // Validate the new password against the schema
-
+  console.log("Updated Successfully");
   res.status(200).json({
     status: "success",
     message: "Password updated!",

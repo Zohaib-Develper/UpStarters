@@ -33,15 +33,15 @@ exports.AddProject = catchAync(async (req, res, next) => {
   });
 });
 
-exports.All_Active_Projects = catchAync(async (req, res, next) => {
-  const projects = await Project.find({ status: "active" });
+// exports.All_Active_Projects = catchAync(async (req, res, next) => {
+//   const projects = await Project.find({ status: "active" });
 
-  res.status(200).json({
-    status: "success",
-    length: projects.length,
-    data: { projects },
-  });
-});
+//   res.status(200).json({
+//     status: "success",
+//     length: projects.length,
+//     data: { projects },
+//   });
+// });
 
 exports.All_Projects = catchAync(async (req, res, next) => {
   let projects = await Project.find().populate("creator");
@@ -191,6 +191,37 @@ exports.DeleteProject = catchAync(async (req, res, next) => {
 
 exports.Get_Related_Projects = catchAync(async (req, res, next) => {
   let projects = await Project.find().populate("creator").limit(4);
+  for (let i = 0; i < projects.length; i++) {
+    projects[i].creator = {
+      name: projects[i].creator.name,
+      id: projects[i].id,
+    };
+  }
+  res.status(200).json({
+    status: "success",
+    length: projects.length,
+    data: projects,
+  });
+});
+
+exports.GetProjectsOfUser = catchAync(async (req, res, next) => {
+  console.log("GetProjectsOfUser request received");
+
+  let projects = await Project.find({ creator: req.user._id });
+
+  console.log("Passing data");
+  res.status(200).json({
+    status: "success",
+    length: projects.length,
+    data: projects,
+  });
+});
+
+exports.GetProjectsByCategory = catchAync(async (req, res, next) => {
+  let projects = await Project.find({ category: req.params.category }).populate(
+    "creator"
+  );
+
   for (let i = 0; i < projects.length; i++) {
     projects[i].creator = {
       name: projects[i].creator.name,
