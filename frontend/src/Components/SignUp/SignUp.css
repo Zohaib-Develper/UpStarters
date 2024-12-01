@@ -68,7 +68,7 @@
   flex: 1;
 }
 
-.card,
+.card-number,
 .cvv,
 .expiry,
 .user-first-name,
@@ -82,7 +82,7 @@
   padding: 0 10px;
   border: none;
 }
-.card svg,
+.card-number svg,
 .cvv svg,
 .expiry svg {
   height: 16px;
