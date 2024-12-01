@@ -54,7 +54,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="container mt-5 d-flex justify-content-center">
+    <div className="container mt-5 mb-5 d-flex justify-content-center">
       <div className="card p-5 shadow-lg w-75">
         <h2 className="text-center mb-4">Account Settings</h2>
 
@@ -137,7 +137,7 @@ const Settings = () => {
 
           <div className="mb-4">
             <p
-              className="text-primary text-decoration-underline"
+              className="text-success text-decoration-underline"
               style={{ cursor: "pointer" }}
               onClick={() => setShowPasswordModal(true)}
             >
@@ -146,7 +146,7 @@ const Settings = () => {
           </div>
           <div className="d-flex justify-content-center">
             {" "}
-            <button type="submit" className="btn btn-primary w-25">
+            <button type="submit" className="btn btn-success w-25">
               Save Changes
             </button>
           </div>
