@@ -6,9 +6,14 @@ import axios from "axios";
 const SidePanel = ({ isOpen, closePanel, user }) => {
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const userParts = user.name.split(" ");
-  let firstName = userParts[0];
-  let lastName = userParts[1];
+  let firstName = "";
+  let lastName = "";
+
+  if (user?.name) {
+    const userParts = user.name.split(" ");
+    firstName = userParts[0] || "";
+    lastName = userParts[1] || "";
+  }
   // Navigation handlers
   const handleCreateProject = () => {
     closePanel();

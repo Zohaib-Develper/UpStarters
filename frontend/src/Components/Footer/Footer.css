@@ -5,12 +5,10 @@
   border-top: 1px solid #ddd;
   color: #333;
 }
-
 .footer-top {
   padding: 20px 0;
   text-align: center;
 }
-
 .footer-nav ul {
   display: flex;
   flex-wrap: wrap;

@@ -5,6 +5,7 @@ const userHandler = require("./routers/userRouter");
 const investmentHandler = require("./routers/investmentRouter");
 const adminHandler = require("./routers/adminRouter");
 const cookieParser = require("cookie-parser");
+console.log(process.env.EMAIL);
 
 const cors = require("cors");
 
@@ -19,7 +20,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(cookieParser());
 const errorController = require("./controllers/errorController");
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

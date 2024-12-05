@@ -67,8 +67,7 @@ const CreateProject = () => {
       <form
         onSubmit={handleSubmit}
         className="container"
-        enctype="multipart/form-data"
-      >
+        enctype="multipart/form-data">
         {/* Project Title */}
         <div className="mb-3">
           <label htmlFor="title" className="form-label">
@@ -97,8 +96,7 @@ const CreateProject = () => {
             onChange={handleInputChange}
             rows="4"
             className="form-control"
-            required
-          ></textarea>
+            required></textarea>
         </div>
 
         {/* Funding Goal */}
@@ -128,13 +126,24 @@ const CreateProject = () => {
             value={formData.category}
             onChange={handleInputChange}
             className="form-select"
-            required
-          >
+            required>
             <option value="">Select a Category</option>
             <option value="Technology">Technology</option>
             <option value="Art">Art</option>
             <option value="Science">Science</option>
+            <option value="Design">Design</option>
+            <option value="Music">Music</option>
+            <option value="Film">Film</option>
+            <option value="Food">Food</option>
+            <option value="Gaming">Gaming</option>
+            <option value="Photography">Photography</option>
+            <option value="Fashion">Fashion</option>
+            <option value="Health">Health</option>
+            <option value="Publishing">Publishing</option>
+            <option value="Comics">Comics</option>
+            <option value="Sports">Sports</option>
             <option value="Education">Education</option>
+            <option value="Travel">Travel</option>
           </select>
         </div>
 

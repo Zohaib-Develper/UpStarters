@@ -34,19 +34,19 @@ const ViewInvestments = () => {
             <tr key={investment.id}>
               <td>
                 <img
-                  src={investment.project.image}
-                  alt={investment.title}
+                  src={investment.project?.image}
+                  alt={investment?.title}
                   className="project-table-image"
                 />
               </td>
-              <td>{investment.project.title}</td>
+              <td>{investment.project?.title}</td>
               <td>
-                {investment.project.investmentGoal -
-                  investment.project.fundsRaised}{" "}
+                {investment.project?.investmentGoal -
+                  investment.project?.fundsRaised}{" "}
                 Rs
               </td>
-              <td>{investment.project.fundsRaised} Rs</td>
-              <td>{investment.project.category}</td>
+              <td>{investment.project?.fundsRaised} Rs</td>
+              <td>{investment.project?.category}</td>
               <td>{investment.amount} Rs</td>
             </tr>
           ))}
