@@ -99,6 +99,7 @@ export default function ProjectDetails() {
                 justifyContent: "center",
                 alignItems: "center",
                 borderRadius: "3px",
+                cursor:"pointer"
               }}
             >
               <StripeCheckOut
@@ -116,7 +117,7 @@ export default function ProjectDetails() {
                     border: "none",
                     background: "transparent",
                     color: "white",
-                    fontSize: "1.1rem",
+                    fontSize: "0.7rem",
                   }}
                 >
                   Back this project
