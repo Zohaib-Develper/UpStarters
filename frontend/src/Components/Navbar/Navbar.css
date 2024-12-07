@@ -9,6 +9,8 @@
   margin-right: 25px;
   cursor: pointer;
   border: 1px solid black;
+  position: relative;
+  z-index: 1000;
 }
 .profile svg {
   height: 15px;
@@ -16,6 +18,11 @@
 }
 .nav-button {
   text-decoration: none;
+}
+.logo-profile-wrapper{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;  
 }
 .search-bar {
   flex-grow: 1;
@@ -43,10 +50,6 @@
 .blur-content {
   pointer-events: none;
   user-select: none;
-}
-.profile {
-  position: relative;
-  z-index: 1000;
 }
 .profile:hover {
   cursor: pointer;

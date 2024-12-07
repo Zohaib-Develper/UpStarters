@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Category from "../Category/Category";
 import SidePanel from "../SidePanel/SidePanel";
 import { useAuth } from "../../utils/AuthContext";
 import "./Navbar.css";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { pathname } = useLocation();
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -61,30 +63,43 @@ const Navbar = () => {
             </Link>
           </div>
           <div className="search-bar input-group pt-3">
+            <input
+              type="search"
+              placeholder="Search Projects, Creators, and Investors"
+              className="form-control border-0"
+              aria-label="Search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  navigate(`?search=${search}`);
+                }
+              }}
+              style={{
+                boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+              }}
+            />
             <span
               className="input-group-text"
               style={{
                 backgroundColor: "transparent",
                 border: "none",
                 boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-              }}>
+                cursor: "pointer",
+              }}
+              onClick={() => navigate(`?search=${search}`)}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
                 height="16"
                 fill="currentColor"
                 className="bi bi-search"
-                viewBox="0 0 16 16">
+                viewBox="0 0 16 16"
+              >
                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
               </svg>
             </span>
-            <input
-              type="search"
-              placeholder="Search Projects, Creators, and Investors"
-              className="form-control border-0"
-              aria-label="Search"
-              style={{ boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)" }}
-            />  
           </div>
           {user ? (
             <div className="profile mt-3" onClick={togglePanel}>
@@ -97,14 +112,16 @@ const Navbar = () => {
               <Link to="/login" className="nav-button">
                 <button
                   className="btn btn-outline-success me-2 d-flex align-items-center justify-content-center"
-                  style={{ height: "33px" }}>
+                  style={{ height: "33px" }}
+                >
                   Log In
                 </button>
               </Link>
               <Link to="/signup" className="nav-button">
                 <button
                   className="btn btn-success d-flex align-items-center justify-content-center"
-                  style={{ height: "33px" }}>
+                  style={{ height: "33px" }}
+                >
                   Sign Up
                 </button>
               </Link>
@@ -116,7 +133,7 @@ const Navbar = () => {
       <SidePanel
         isOpen={isSidePanelOpen}
         closePanel={() => setIsSidePanelOpen(false)}
-        user = {user}
+        user={user}
       />
       {/* Separate overlay div */}
       {isSidePanelOpen && (

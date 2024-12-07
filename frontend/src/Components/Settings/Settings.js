@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-
 const Settings = () => {
   const [profile, setProfile] = useState({});
   const [passwordData, setPasswordData] = useState({
@@ -55,7 +54,7 @@ const Settings = () => {
 
   return (
     <div className="container mt-5 mb-5 d-flex justify-content-center">
-      <div className="card p-5 shadow-lg w-75">
+      <div className="card p-3 shadow-lg">
         <h2 className="text-center mb-4">Account Settings</h2>
 
         <form onSubmit={handleSave}>
@@ -139,14 +138,10 @@ const Settings = () => {
             <p
               className="text-success text-decoration-underline"
               style={{ cursor: "pointer" }}
-              onClick={() => setShowPasswordModal(true)}
-            >
+              onClick={() => setShowPasswordModal(true)}>
               Change your password
             </p>
-          </div>
-          <div className="d-flex justify-content-center">
-            {" "}
-            <button type="submit" className="btn btn-success w-25">
+            <button type="submit" className="save-button btn btn-success">
               Save Changes
             </button>
           </div>
@@ -163,8 +158,7 @@ const Settings = () => {
                 <button
                   type="button"
                   className="btn-close"
-                  onClick={() => setShowPasswordModal(false)}
-                ></button>
+                  onClick={() => setShowPasswordModal(false)}></button>
               </div>
               <div className="modal-body">
                 <div className="mb-3">
@@ -201,15 +195,13 @@ const Settings = () => {
                 <button
                   type="button"
                   className="btn btn-secondary"
-                  onClick={() => setShowPasswordModal(false)}
-                >
+                  onClick={() => setShowPasswordModal(false)}>
                   Close
                 </button>
                 <button
                   type="button"
                   className="btn btn-primary"
-                  onClick={handleUpdatePassword}
-                >
+                  onClick={handleUpdatePassword}>
                   Update Password
                 </button>
               </div>
