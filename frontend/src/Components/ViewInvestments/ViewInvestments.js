@@ -7,7 +7,7 @@ const ViewInvestments = () => {
   console.log(investments);
   useEffect(() => {
     axios
-      .get("http://localhost:80/api/users/investments", {
+      .get(`${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/users/investments`, {
         withCredentials: true,
       })
       .then((response) => setInvestments(response.data.data.investments))

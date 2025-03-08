@@ -5,7 +5,7 @@ const userHandler = require("./routers/userRouter");
 const investmentHandler = require("./routers/investmentRouter");
 const adminHandler = require("./routers/adminRouter");
 const cookieParser = require("cookie-parser");
-console.log(process.env.EMAIL);
+// console.log(process.env.EMAIL);
 
 const cors = require("cors");
 

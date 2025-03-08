@@ -12,24 +12,30 @@ const AdminLogin = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
+  // Ensure backend URL is defined
+  const backendUrl = import.meta.env.VITE_REACT_APP_BACKENDURL || "http://localhost:80";
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    axios
-      .post(
-        "http://localhost:80/api/admin/login", // Backend API URL
+
+    try {
+      const response = await axios.post(
+        `${backendUrl}/api/admin/login`, // API URL
         { email, password }, // Request body
-        { withCredentials: true } // Axios config for credentials
-      )
-      .then((response) => {
-        setSuccessMessage("Login successful!"); // Set success message\
-        console.log("Response: ", response);
-        login({ name: response.data.name, email: email, role: "admin" });
-        navigate("/admin/dashboard"); // Use a relative path for navigation
-      })
-      .catch((error) => {
-        console.error("Error from backend:", error); // Improved error log
-        setErrorMessage("Something went wrong. Please try again."); // Set error message
-      });
+        { withCredentials: true } // Send cookies with request
+      );
+
+      setSuccessMessage("Login successful!");
+      console.log("Response: ", response);
+
+      // Ensure response data exists before using it
+      login({ name: response.data?.name || "Admin", email, role: "admin" });
+
+      navigate("/admin/dashboard");
+    } catch (error) {
+      console.error("Error from backend:", error?.response?.data || error.message);
+      setErrorMessage(error?.response?.data?.message || "Something went wrong. Please try again.");
+    }
   };
 
   return (
@@ -39,17 +45,13 @@ const AdminLogin = () => {
           <div className="logo-placeholder">A</div>
           <h2 className="text-green">Admin Panel</h2>
         </div>
-        {errorMessage && (
-          <div className="alert alert-danger">{errorMessage}</div>
-        )}
-        {successMessage && (
-          <div className="alert alert-success">{successMessage}</div>
-        )}
+
+        {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+        {successMessage && <div className="alert alert-success">{successMessage}</div>}
+
         <form onSubmit={handleLogin}>
           <div className="mb-3">
-            <label htmlFor="email" className="form-label text-green">
-              Email
-            </label>
+            <label htmlFor="email" className="form-label text-green">Email</label>
             <input
               type="email"
               className="form-control"
@@ -60,10 +62,9 @@ const AdminLogin = () => {
               required
             />
           </div>
+
           <div className="mb-3">
-            <label htmlFor="password" className="form-label text-green">
-              Password
-            </label>
+            <label htmlFor="password" className="form-label text-green">Password</label>
             <input
               type="password"
               className="form-control"
@@ -74,10 +75,9 @@ const AdminLogin = () => {
               required
             />
           </div>
+
           <div className="d-grid">
-            <button type="submit" className="btn btn-green">
-              Login
-            </button>
+            <button type="submit" className="btn btn-green">Login</button>
           </div>
         </form>
       </div>

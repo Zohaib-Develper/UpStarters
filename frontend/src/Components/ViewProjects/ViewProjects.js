@@ -6,7 +6,7 @@ const ViewProjects = () => {
   const [projects, setProjects] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:80/api/projects/userprojects", {
+      .get(`${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/projects/userprojects`, {
         withCredentials: true,
       })
       .then((response) => {

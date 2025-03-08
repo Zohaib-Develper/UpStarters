@@ -32,7 +32,7 @@ const Sidebar = () => {
 
     axios
       .post(
-        "http://localhost:80/api/admin/logout", // Backend API URL
+        `${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/admin/logout`, // Backend API URL
         {},
         { withCredentials: true } // Axios config for credentials
       )

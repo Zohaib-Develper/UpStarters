@@ -54,4 +54,9 @@ adminSchema.set("toJSON", {
 
 const Admin = mongoose.model("Admin", adminSchema);
 
+// await Admin.create({
+//   email: "admin@example.com",
+//   password: "password123",
+// })
+
 module.exports = Admin;

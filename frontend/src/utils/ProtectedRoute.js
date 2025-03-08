@@ -11,7 +11,7 @@ const ProtectedRoute = ({ element: Element }) => {
   if (!user) {
     // Redirect to login if not authenticated
     return <Navigate to="/users/login" state={{ from: location }} replace />;
-  } else if (user?.role == "admin") {
+  } else if (user?.role === "admin") {
     return (
       <div className="d-flex dashboard " style={{ backgroundColor: "#fff" }}>
         <Sidebar />
@@ -21,7 +21,7 @@ const ProtectedRoute = ({ element: Element }) => {
         </div>
       </div>
     );
-  } else if (user.role == "user") {
+  } else if (user.role === "user") {
     return (
       <>
         {" "}

@@ -24,7 +24,7 @@ function Payment() {
       "Content-Type": "application/json",
     };
 
-    const result = await fetch(`http://localhost:80/api/payment`, {
+    const result = await fetch(`${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/payment`, {
       method: "POST",
       headers,
       body: JSON.stringify(body),

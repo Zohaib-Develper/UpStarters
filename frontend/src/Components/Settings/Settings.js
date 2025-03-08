@@ -11,7 +11,7 @@ const Settings = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:80/api/users", { withCredentials: true })
+      .get(`${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/users`, { withCredentials: true })
       .then((response) => setProfile(response.data.data))
       .catch((err) => console.error("Error: ", err));
   }, []);
@@ -29,7 +29,7 @@ const Settings = () => {
   const handleSave = (e) => {
     e.preventDefault();
     axios
-      .patch("http://localhost:80/api/users", profile, {
+      .patch(`${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/users`, profile, {
         withCredentials: true,
       })
       .then(() => alert("Profile updated successfully!"))
@@ -38,7 +38,7 @@ const Settings = () => {
 
   const handleUpdatePassword = () => {
     axios
-      .patch("http://localhost:80/api/users/updatePassword", passwordData, {
+      .patch(`${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/users/updatePassword`, passwordData, {
         withCredentials: true,
       })
       .then(() => {

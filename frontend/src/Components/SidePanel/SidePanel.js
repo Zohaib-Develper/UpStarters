@@ -79,7 +79,7 @@ const SidePanel = ({ isOpen, closePanel, user }) => {
         className="logout-user"
         onClick={() => {
           axios
-            .get("http://localhost:80/api/users/logout", {
+            .get(`${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/users/logout`, {
               withCredentials: true,
             })
             .then(() => {

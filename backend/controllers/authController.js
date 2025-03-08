@@ -98,14 +98,14 @@ exports.VerifyOTP = catchAync(async (req, res, next) => {
     return next(new AppError("Invalid or expired OTP.", 400));
   }
 
-  console.log("Going to create user");
+  // console.log("Going to create user");
   // OTP is verified, create user
   const user = await User.create({
     ...storedData,
     email,
   });
 
-  console.log("USER CREATED:  ", user);
+  // console.log("USER CREATED:  ", user);
   // Clear OTP and user data from the store
   otpStore.delete(email);
 

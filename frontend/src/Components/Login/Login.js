@@ -9,6 +9,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null); // Added error state
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -21,26 +22,43 @@ const Login = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validate inputs
     if (!email || !password) {
-      alert("Please fill in both email and password fields.");
+      setError("Please fill in both email and password fields.");
       return;
     }
-    axios
-      .post(
-        "http://localhost:80/api/users/login",
+
+    try {
+      console.log("Sending login request to backend...");
+      const response = await axios.post(
+        `${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/users/login`,
         { email, password },
         { withCredentials: true }
-      )
-      .then((res) => {
-        login({ name: res.data.name, role: "user" });
+      );
+
+      console.log("Login response:", response.data);
+
+      // Check if the response contains the expected data
+      if (response.data && response.data.name) {
+        login({ name: response.data.name, role: "user" });
         navigate("/");
-      })
-      .catch(() => {
-        alert("Incorrect Username or password");
-      });
+      } else {
+        setError("Invalid response from the server. Please try again.");
+      }
+    } catch (error) {
+      console.error("Login error 🤣:", error);
+      if (error.response) {
+        // Handle specific error messages from the backend
+        setError(
+          error.response.data.message || "Incorrect username or password."
+        );
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+    }
   };
 
   return (
@@ -52,6 +70,8 @@ const Login = () => {
             Get Started at
             <p>Upstarters</p>
           </div>
+          {error && <div className="error-message">{error}</div>}{" "}
+          {/* Display error message */}
           <form onSubmit={handleSubmit}>
             <div className="credentials">
               <div className="email">
@@ -79,12 +99,13 @@ const Login = () => {
                 </div>
               </div>
               <div className="pass">
-              <svg
+                <svg
                   width="16"
                   height="16"
                   viewBox="0 0 16 16"
                   fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <path
                     d="M7.42842 12.4889V13.1415C7.42842 13.3146 7.35966 13.4806 7.23728 13.603C7.1149 13.7253 6.94891 13.7941 6.77583 13.7941H5.47067V14.4467C5.47067 14.7928 5.33316 15.1248 5.08839 15.3696C4.84363 15.6143 4.51165 15.7518 4.1655 15.7518H1.55517C1.20902 15.7518 0.877041 15.6143 0.632274 15.3696C0.387508 15.1248 0.25 14.7928 0.25 14.4467V12.7591C0.250074 12.413 0.387631 12.0811 0.632414 11.8363L5.68341 6.78535C5.3737 5.7337 5.40292 4.61123 5.76693 3.57711C6.13093 2.54299 6.81125 1.64971 7.71141 1.02392C8.61157 0.398134 9.68589 0.0716033 10.782 0.0906305C11.8782 0.109658 12.9405 0.473277 13.8184 1.12993C14.6963 1.78658 15.3452 2.70294 15.6731 3.74906C16.001 4.79519 15.9913 5.918 15.6452 6.95827C15.2992 7.99854 14.6345 8.90349 13.7453 9.54479C12.8561 10.1861 11.7876 10.5312 10.6913 10.5312H9.38486V11.8363C9.38486 12.0094 9.31611 12.1754 9.19473 12.2978C9.07335 12.4201 8.90736 12.4889 8.73428 12.4889H7.42842ZM5.67823 3.30165C5.98169 2.44395 6.56365 1.81628 7.28158 1.43726C7.99951 1.05825 8.85361 0.889514 9.68053 0.993531C10.5075 1.09755 11.2698 1.46577 11.7516 2.06425C12.2335 2.66273 12.3761 3.44424 12.1185 4.17245L6.78476 8.4167L5.67823 3.30165Z"
                     fill="black"

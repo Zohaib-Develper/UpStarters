@@ -72,7 +72,7 @@ const SignUp = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:80/api/users/signup",
+        `${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/users/signup`,
         {
           email,
           password,

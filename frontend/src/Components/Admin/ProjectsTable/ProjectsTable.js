@@ -9,7 +9,7 @@ const ProjectsTable = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:80/api/admin/projects", {
+      .get(`${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/admin/projects`, {
         withCredentials: true,
       })
       .then((res) => setProjects(res.data.projects));
@@ -33,7 +33,7 @@ const ProjectsTable = () => {
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this project?")) {
       alert(`Project with ID ${id} deleted.`);
-      axios.delete(`http://localhost:80/api/admin/projects/${id}`, {
+      axios.delete(`${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/admin/projects/${id}`, {
         withCredentials: true,
       });
       setProjects(projects.filter((project) => project._id != id));
