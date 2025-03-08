@@ -41,9 +41,6 @@ To run this project locally, follow these steps:
 ## 🤝 Contributing
 Contributions are welcome! Feel free to fork the repository and submit pull requests.
 
-## 📜 License
-This project is licensed under [Your Chosen License] (e.g., MIT, Apache 2.0).
-
 ## 📬 Contact
 For any inquiries, reach out to:
 - **Email:** chand.ali.web@gmail.com
