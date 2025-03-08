@@ -20,5 +20,5 @@ mongoose
 // Start the server
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
-  console.log(`App is live on port${port}`);
+  console.log(`App is live on port ${port}`);
 });

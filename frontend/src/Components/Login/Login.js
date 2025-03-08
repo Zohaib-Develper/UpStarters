@@ -34,7 +34,7 @@ const Login = () => {
     try {
       console.log("Sending login request to backend...");
       const response = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/users/login`,
+        `${process.env.REACT_APP_BACKENDURL}/api/users/login`,
         { email, password },
         { withCredentials: true }
       );

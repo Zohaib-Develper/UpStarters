@@ -13,12 +13,14 @@ const ProjectList = () => {
   const category = params.get("category");
   const search = params.get("search")?.toLowerCase();
 
+  // console.log("Backend URL:", import.meta.env.VITE_REACT_APP_BACKENDURL);
+
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        let url = `${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/projects/all`;
+        let url = `${process.env.REACT_APP_BACKENDURL}/api/projects/all`;
         if (category) {
-          url = `${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/projects/category/${category}`;
+          url = `${process.env.REACT_APP_BACKENDURL}/api/projects/category/${category}`;
         }
 
         const res = await axios.get(url, { withCredentials: true });

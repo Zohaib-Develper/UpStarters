@@ -15,13 +15,13 @@ export default function ProjectDetails() {
     const fetchProjectDetails = async () => {
       try {
         let response = await axios.get(
-          `${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/projects/${id}`,
+          `${process.env.REACT_APP_BACKENDURL}/api/projects/${id}`,
           { withCredentials: true }
         );
         setProject(response.data.data);
 
         response = await axios.get(
-          `${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/projects/relatedProjects/${id}`,
+          `${process.env.REACT_APP_BACKENDURL}/api/projects/relatedProjects/${id}`,
           {
             withCredentials: true,
           }
@@ -39,7 +39,7 @@ export default function ProjectDetails() {
   const makePayment = async (token, project) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/invest/${project._id}`,
+        `${process.env.REACT_APP_BACKENDURL}/api/invest/${project._id}`,
         {
           token,
           project: { ...project, price: 1000 },

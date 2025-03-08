@@ -195,16 +195,8 @@ exports.UpdatePassword = catchAync(async (req, res, next) => {
 });
 
 exports.LogOut = catchAync(async (req, res, next) => {
-  res.cookie("jwt", "logout", {
-    expires: new Date(Date.now() + 10),
-    httpOnly: true,
-    sameSite: "strict",
-  });
-
-  res.status(200).json({
-    status: "success",
-    message: "Logged out successfully!",
-  });
+  res.cookie("jwt", "", { expires: new Date(Date.now()), httpOnly: true, sameSite: "strict" });
+  res.status(200).json({ status: "success", message: "Logged out successfully!" });
 });
 
 //For admin
@@ -260,15 +252,8 @@ exports.AdminLogin = catchAync(async (req, res, next) => {
   CreateSendToken(admin, 200, res);
 });
 
-exports.AdminLogout = catchAync(async (req, res, next) => {
-  res.cookie("jwt", "logout", {
-    expires: new Date(Date.now() + 10),
-    httpOnly: true,
-    sameSite: "strict",
-  });
 
-  res.status(200).json({
-    status: "success",
-    message: "Logged out successfully!",
-  });
+exports.AdminLogout = catchAync(async (req, res, next) => {
+  res.cookie("jwt", "", { expires: new Date(Date.now()), httpOnly: true, sameSite: "strict" });
+  res.status(200).json({ status: "success", message: "Logged out successfully!" });
 });

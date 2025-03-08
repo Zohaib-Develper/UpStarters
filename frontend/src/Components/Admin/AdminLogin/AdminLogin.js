@@ -13,7 +13,7 @@ const AdminLogin = () => {
   const [successMessage, setSuccessMessage] = useState("");
 
   // Ensure backend URL is defined
-  const backendUrl = import.meta.env.VITE_REACT_APP_BACKENDURL || "http://localhost:80";
+  const backendUrl = process.env.REACT_APP_BACKENDURL;
 
   const handleLogin = async (e) => {
     e.preventDefault();

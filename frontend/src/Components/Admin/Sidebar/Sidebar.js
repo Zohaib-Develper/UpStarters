@@ -32,13 +32,13 @@ const Sidebar = () => {
 
     axios
       .post(
-        `${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/admin/logout`, // Backend API URL
+        `${process.env.REACT_APP_BACKENDURL}/api/users/logout`, // Backend API URL
         {},
         { withCredentials: true } // Axios config for credentials
       )
       .then(() => {
         logout();
-        navigate("/admin/login"); // Use a relative path for navigation
+        navigate("/"); // Use a relative path for navigation
       });
   };
 

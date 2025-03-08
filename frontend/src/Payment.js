@@ -24,7 +24,7 @@ function Payment() {
       "Content-Type": "application/json",
     };
 
-    const result = await fetch(`${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/payment`, {
+    const result = await fetch(`${process.env.REACT_APP_BACKENDURL}/api/payment`, {
       method: "POST",
       headers,
       body: JSON.stringify(body),

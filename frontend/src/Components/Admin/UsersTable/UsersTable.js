@@ -7,7 +7,7 @@ const UsersTable = () => {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/admin/users`, { withCredentials: true })
+      .get(`${process.env.REACT_APP_BACKENDURL}/api/admin/users`, { withCredentials: true })
       .then((res) => setUsers(res.data.users));
   }, []);
 
@@ -28,7 +28,7 @@ const UsersTable = () => {
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       axios
-        .delete(`${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/admin/users/${id}`, {
+        .delete(`${process.env.REACT_APP_BACKENDURL}/api/admin/users/${id}`, {
           withCredentials: true,
         })
         .then(() => setUsers(users.filter((user) => user._id != id)));

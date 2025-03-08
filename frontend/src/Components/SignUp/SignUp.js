@@ -72,7 +72,7 @@ const SignUp = () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/users/signup`,
+        `${process.env.REACT_APP_BACKENDURL}/api/users/signup`,
         {
           email,
           password,

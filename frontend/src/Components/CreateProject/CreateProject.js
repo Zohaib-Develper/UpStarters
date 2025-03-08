@@ -47,7 +47,7 @@ const CreateProject = () => {
     try {
       // Send Data to Backend
       const response = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/projects`,
+        `${process.env.REACT_APP_BACKENDURL}/api/projects`,
         formDataToSend,
         {
           withCredentials: true,

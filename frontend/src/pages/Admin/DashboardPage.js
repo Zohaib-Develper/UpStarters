@@ -8,7 +8,7 @@ const DashboardPage = () => {
   const [stats, setStats] = useState({});
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_REACT_APP_BACKENDURL}/api/admin/stats`, { withCredentials: true })
+      .get(`${process.env.REACT_APP_BACKENDURL}/api/admin/stats`, { withCredentials: true })
       .then((res) =>
         setStats({
           noOfProjects: res.data.noOfUsers,
